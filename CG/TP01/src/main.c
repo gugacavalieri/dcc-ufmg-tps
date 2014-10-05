@@ -21,7 +21,7 @@ int main(int argc, char **argv) {
 	
 	// register callbacks
 	glutDisplayFunc(renderScene);
-	glutReshapeFunc(windowResize);
+	//glutReshapeFunc(windowResize);
 	glutKeyboardFunc(processNormalInput);
 	glutSpecialFunc(processSpecialKeys);
 	glutPassiveMotionFunc(mouseMotion);

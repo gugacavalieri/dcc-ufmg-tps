@@ -30,14 +30,18 @@ node_pointer get_first_element(list *l) {
 	return l->first->next;
 }
 
-void remove_item(node_pointer p, list *l) {
+node_pointer remove_item(node_pointer p, list *l) {
 	node_pointer previous_node = p->previous;
 	node_pointer next_node = p->next;
 	previous_node->next = next_node;
 	if ( next_node != NULL )
 		next_node->previous = previous_node;
+	else
+		l->last = previous_node;
 	free(p);
 	l->numberOfElements --;
+	
+	return previous_node;
 }
 
 /* remove o ultimo elemento da lista */

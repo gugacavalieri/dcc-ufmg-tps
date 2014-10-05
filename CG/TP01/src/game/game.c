@@ -47,9 +47,7 @@ void initGlobal() {
 	middle_y = (float) screenHeight / 2;
 	
 	paused = FALSE;
-	debug = FALSE;
 	start = FALSE;
-
 	
 }
 
@@ -63,13 +61,14 @@ void gameLoop(int data) {
 	glutTimerFunc(REFRESH_RATE, gameLoop, 1);
 	
 	/* se nao pausado, atualiza as variaveis e redesenha a tela */
-	if( ! paused && ! debug ) {
+	if( ! paused && start ) {
 		
 		if( ! game_over ){ 
 			update_objects(screenWidth, screenHeight);
 		}
 		
-		glutPostRedisplay();
 	}
+	
+	glutPostRedisplay();
 		
 }

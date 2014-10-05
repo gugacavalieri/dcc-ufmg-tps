@@ -6,8 +6,8 @@
 
 #define NUMBER_ENEMIES 14
 
-#define CHANCE_TO_SHOOT 0.0005f
-#define CHANCE_TO_RUSH 0.0005f
+#define CHANCE_TO_SHOOT 0.0007f
+#define CHANCE_TO_RUSH 0.0007f
 #define RAND_LIMIT 1000000
 
 void randomize(void)
@@ -96,7 +96,7 @@ void next_wave (squad *s, int screenWidth, int screenHeight) {
 	s->numberOfAliens *= 2;
 	s->canRush = s->numberOfAliens / 3;
 	s->aliensAlive = s->numberOfAliens;
-	s->y_speed *= 2;
+	s->y_speed *= 1.1f;
 	s->wave ++;
 	
 	generate_squad(s, screenWidth);

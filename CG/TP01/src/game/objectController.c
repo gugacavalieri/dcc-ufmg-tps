@@ -15,6 +15,7 @@ float spaceship_size;
 int score;
 
 boolean game_over;
+boolean win;
 
 /* free memory allocated */
 void clean_up() {
@@ -35,6 +36,7 @@ void init_controller (int screenWidth, int screenHeight) {
 	bullet_size = (float) screenHeight / BULLET_SIZE;
 	spaceship_size = (float) screenHeight / SPACESHIP_SIZE;
 	game_over = FALSE;
+	win = FALSE;
 	score = 0;
 	
 	/* inicializa a nave principal */
@@ -120,7 +122,7 @@ void update_squad(squad *s, list *bullets, int screenWidth, int screenHeight) {
 				s->rushing--;
 			}
 			explode(&iterator->o);
-			remove_item(iterator, &s->aliens);
+			iterator = remove_item(iterator, &s->aliens);
 			score += KILL_POINTS;
 			s->aliensAlive--;
 		}
@@ -139,8 +141,11 @@ void update_squad(squad *s, list *bullets, int screenWidth, int screenHeight) {
 	}
 	
 	/* check end of wave */
-	if ( s->aliensAlive == 0 && s->wave < MAX_WAVES ) {
-		next_wave(s, screenWidth, screenHeight);
+	if ( s->aliensAlive == 0 ) {
+		if( s->wave < MAX_WAVES )
+			next_wave(s, screenWidth, screenHeight);
+		else
+			win = TRUE;
 		return;
 	}
 }
@@ -158,7 +163,7 @@ void update_objects(int screenWidth, int screenHeight) {
 		/* check out of bounds */
 		if( y_out_of_bounds(&iterator->o, screenHeight) ) {
 			/* remove bullet */
-			remove_item(iterator, &bullets);
+			 iterator = remove_item(iterator, &bullets);
 		}
 		
 		iterator = iterator->next;

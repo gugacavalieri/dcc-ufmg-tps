@@ -49,7 +49,7 @@ void renderScene(void) {
 	/* Limpar todos os pixels */
 	glClear (GL_COLOR_BUFFER_BIT);
 	
-	if ( !game_over && start ) {
+	if ( !game_over && start && !win) {
 		draw_objects();
 		draw_mouse_motion(mouse_x);
 		draw_hud();
@@ -59,6 +59,10 @@ void renderScene(void) {
 	}
 	if( game_over )
 		draw_text("GAME OVER! Aperte 'r' para reiniciar!", middle_x, middle_y);
+	if( win ) {
+		draw_text("Voce derrotou o esquadrao alienigena!", middle_x, middle_y);
+		draw_text("Aperte 'r' para reiniciar!", middle_x, middle_y - 30);
+	}
 	
 	/* Não esperar! */
 	glFlush ();
