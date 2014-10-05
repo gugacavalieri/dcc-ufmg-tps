@@ -1,0 +1,6 @@
+all: tp_01
+tp_01:
+	gcc -o out/galaxian src/main.c -lGL -lGLU -lglut -lm
+clean:
+	rm -rf *.o
+
