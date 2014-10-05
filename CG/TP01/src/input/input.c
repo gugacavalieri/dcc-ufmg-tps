@@ -3,13 +3,18 @@
 
 #define ESC_KEY_CODE 27
 
+#define DEFAULT_WIDTH 800
+#define DEFAULT_HEIGHT 600
+
 /* process program received arguments */
 void processProgramArguments(int argc, char **argv) {
 		
 		// check program arguments
 		if(argc != 3) {
 			printf("Erro de parametros! Uso: ./galaxian <SCREEN WIDTH> <SCREEN HEIGHT>\n");
-			exit(0);
+			printf("Usando paremtros padrao! SCREEN WIDTH: 800 - SCREEN HEIGHT: 600\n");
+			screenWidth = DEFAULT_WIDTH;
+			screenHeight = DEFAULT_HEIGHT;
 		}
 		else{
 			// get screen width and height
@@ -41,6 +46,7 @@ void processSpecialKeys(int key, int x, int y) {
 	
 }
 
+/* processa clicks do mouse */
 void processMouseClick(int button, int state, int x, int y) {
 
 	// seleciona eventos 'key up'
@@ -65,6 +71,7 @@ void processMouseClick(int button, int state, int x, int y) {
 	}
 }
 
+/* processa movimentacao do mouse */
 void mouseMotion(int x, int y) {
 
 

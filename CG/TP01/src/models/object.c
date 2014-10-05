@@ -25,6 +25,22 @@ void paint_object(object *s, int color) {
 	}
 }
 
+/* move um objeto 'pace' pixels em uma direção checando os limites da tela */
+void move_spaceship(object *s, int direction, float pace, int leftBound, int rightBound) {
+	
+	if( direction == LEFT ) {
+		// check screen bounds
+		if( (s->x - s->size - pace) > leftBound )
+			s->x -= pace;
+	}
+	if( direction == RIGHT ) {
+		// check screen bounds
+		if( (s->x + s->size + pace ) < rightBound ) 
+			s->x += pace;
+	}
+}
+
+/* atualiza posição do objeto de acordo com o vetor velocidade */
 void update_object_position(object *s) {
 	s->x += s->x_speed;
 	s->y += s->y_speed;

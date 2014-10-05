@@ -27,35 +27,44 @@ boolean start;
 /*
  *FUNCTIONS 
  */
+ 
+ void calculate_screen_variables() {
+	middle_x = (float) screenWidth / 2;
+	middle_y = (float) screenHeight / 2;
+}
 
+/* inicializa as variaveis do jogo */
 void initGlobal() {
-	
-	
 	
 	/* selecionar cor de fundo (preto)*/
 	glClearColor (0.0, 0.0, 0.0, 0.0);
 
 	/* inicializar sistema de viz. */
+	glViewport(0,0,screenWidth,screenHeight);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glOrtho(0.0, screenWidth, 0.0, screenHeight, -1.0, 1.0);
+	//glOrtho(0.0, screenWidth, 0.0, screenHeight, -1.0, 1.0);
+	gluOrtho2D(0, screenWidth, 0, screenHeight);
 	
 	/* inicializa as variaveis */
 	init_controller(screenWidth, screenHeight);
 	
-	middle_x = (float) screenWidth / 2;
-	middle_y = (float) screenHeight / 2;
+	calculate_screen_variables();
 	
 	paused = FALSE;
 	start = FALSE;
 	
 }
 
+
+
+/* reinicia o jogo **/
 void restart() {
 	clean_up();
 	initGlobal();
 }
 
+/* game loop principal */
 void gameLoop(int data) {
 	
 	glutTimerFunc(REFRESH_RATE, gameLoop, 1);

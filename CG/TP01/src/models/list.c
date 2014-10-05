@@ -9,6 +9,7 @@ void init_list(list *l) {
 	l->last = l->first;
 }
 
+/* verifica se a lista esta vazia */
 int is_empty(list *l) {
 	return (l->first == l->last);
 }
@@ -26,10 +27,12 @@ void insert(list *l, object obj) {
 	l->numberOfElements ++;
 }
 
+/* retorna primeiro elemento da lista */
 node_pointer get_first_element(list *l) {
 	return l->first->next;
 }
 
+/* remove o item apontado por p*/
 node_pointer remove_item(node_pointer p, list *l) {
 	node_pointer previous_node = p->previous;
 	node_pointer next_node = p->next;
@@ -56,6 +59,7 @@ void remove_last(list *l) {
 	l->numberOfElements--;
 }
 
+/* desaloca a lista */
 void clear_list(list *l) {
 
 	node_pointer removed_node = l->first->next;

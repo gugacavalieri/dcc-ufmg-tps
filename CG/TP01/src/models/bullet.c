@@ -28,6 +28,7 @@ void init_bullet(object *s, int x, int y, int direction, float size) {
 	
 }
 
+/* desenha um missel ! */
 void draw_bullet(object *s) {
 	
 	glColor3f(s->color[0], s->color[1], s->color[2]);

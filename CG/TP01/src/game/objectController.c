@@ -19,10 +19,8 @@ boolean win;
 
 /* free memory allocated */
 void clean_up() {
-	
 	clear_squad(&enemies);
 	clear_list(&bullets);
-	
 }
 
 /* inicializa as variaveis do controlador */

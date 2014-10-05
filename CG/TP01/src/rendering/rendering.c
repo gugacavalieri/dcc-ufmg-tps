@@ -5,14 +5,19 @@
 #define HUD_POSITION 40
 #define WINDOW_NAME "OpenGalaxian"
 
+/* buffer de interface do usuario */
 char hud_buffer[100];
 
+/* desenha barra de movimentacao do mouse */
 void draw_mouse_motion(int x) {
 	
+	/* escolhe cor da barra */
 	glColor3f(yellow[0], yellow[1], yellow[2]);
 	
+	/* calcula tamanho da barra */
 	float bar_size = (float) screenHeight / MOUSE_BAR_MOTION_SIZE;
 
+	/* draw it ! */
 	glBegin(GL_QUADS);
 		glVertex3f( middle_x , 0.0f  , 0.0f);
 		glVertex3f( x , 0.0f , 0.0f);
@@ -34,6 +39,7 @@ void draw_text(char *string, float x, float y)
 	glPopMatrix();
 }
 
+/* desenha interface do usuario */
 void draw_hud() {
 	/* calcula posicao da hud */
 	float hud_y = (float) (screenHeight - (float)screenHeight / HUD_POSITION);
@@ -44,21 +50,26 @@ void draw_hud() {
 	
 }
 
+/* desenha frame da cena de acordo com as variaveis de estado do jogo */
 void renderScene(void) {
 	
 	/* Limpar todos os pixels */
 	glClear (GL_COLOR_BUFFER_BIT);
 	
+	/* frame de jogo */
 	if ( !game_over && start && !win) {
 		draw_objects();
 		draw_mouse_motion(mouse_x);
 		draw_hud();
 	}
+	/* titulo inicial */
 	if ( !start ) {
 			draw_text("open galaxian . clique para iniciar", middle_x, middle_y);
 	}
+	/* game over title */
 	if( game_over )
 		draw_text("GAME OVER! Aperte 'r' para reiniciar!", middle_x, middle_y);
+	/* frame da vitoria !*/
 	if( win ) {
 		draw_text("Voce derrotou o esquadrao alienigena!", middle_x, middle_y);
 		draw_text("Aperte 'r' para reiniciar!", middle_x, middle_y - 30);
@@ -69,28 +80,18 @@ void renderScene(void) {
 
 }
 
+/* recalcula propocoes quando a janela eh redimensionada */
 void windowResize(int width, int height) {
+	
+	screenWidth = width;
+	screenHeight = height;
+	calculate_screen_variables();
 
-	// Prevent a divide by zero, when window is too short
-	// (you cant make a window of zero width).
-	if(height == 0)
-		height = 1;
-	float ratio = 1.0* width / height;
-
-	// Use the Projection Matrix
+	glClear(GL_COLOR_BUFFER_BIT);
+	glViewport(0,0, width, height);
 	glMatrixMode(GL_PROJECTION);
-
-    // Reset Matrix
 	glLoadIdentity();
-
-	// Set the viewport to be the entire window
-	glViewport(0, 0, width, height);
-
-	// Set the correct perspective.
-	gluPerspective(45,ratio,1,1000);
-
-	// Get Back to the Modelview
-	glMatrixMode(GL_MODELVIEW);
+	gluOrtho2D(0,width,0,height);
 	
 }
 

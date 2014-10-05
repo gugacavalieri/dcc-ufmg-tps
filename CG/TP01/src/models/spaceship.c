@@ -33,6 +33,7 @@ void init_spaceship(object *s, int screenWidth, int screenHeight, float size, in
 	paint_object(s, color);
 }
 
+/* desenha espaconave principal */
 void draw_spaceship(object *s) { 
 	
 	glColor3f(s->color[0], s->color[1], s->color[2]);
@@ -45,19 +46,20 @@ void draw_spaceship(object *s) {
 	
 }
 
+/* inicializa as variaveis do alien */
 void init_alien(object *s, float x, float y, float size, int color) {
-	
+	/* variaveis de posição e tamanho */
 	s->x = x;
 	s->y = y;
 	s->size = size;
-	
+	/* velocidade determinada pelo esquadrao ! */
 	s->x_speed = 0;
 	s->y_speed = 0;
-	
+	/* pinta o alien !*/
 	paint_object(s, color);
 	
 }
-
+/* desenha um alien */
 void draw_alien(object *s) {
 	
 	glColor3f(s->color[0], s->color[1], s->color[2]);
@@ -70,20 +72,7 @@ void draw_alien(object *s) {
 	
 }
 
-void move_spaceship(object *s, int direction, float pace, int leftBound, int rightBound) {
-	
-	if( direction == LEFT ) {
-		// check screen bounds
-		if( (s->x - s->size - pace) > leftBound )
-			s->x -= pace;
-	}
-	if( direction == RIGHT ) {
-		// check screen bounds
-		if( (s->x + s->size + pace ) < rightBound ) 
-			s->x += pace;
-	}
-}
-
+/* atualiza variaveis da nave principal */
 void update_spaceship(object *s, int lower_bound, int higher_bound) {
 	
 	int new_position;

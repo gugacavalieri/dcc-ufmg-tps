@@ -17,11 +17,12 @@ int main(int argc, char **argv) {
 	glutInitWindowSize(screenWidth,screenHeight);
 	glutCreateWindow(WINDOW_NAME);
 
+	/* inicializa variaveis do jogo */
 	initGlobal();
 	
 	// register callbacks
 	glutDisplayFunc(renderScene);
-	//glutReshapeFunc(windowResize);
+	glutReshapeFunc(windowResize);
 	glutKeyboardFunc(processNormalInput);
 	glutSpecialFunc(processSpecialKeys);
 	glutPassiveMotionFunc(mouseMotion);

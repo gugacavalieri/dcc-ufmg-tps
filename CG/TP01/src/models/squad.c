@@ -10,11 +10,13 @@
 #define CHANCE_TO_RUSH 0.0007f
 #define RAND_LIMIT 1000000
 
+/* inicializa semente do rand() */
 void randomize(void)
 {
     srand(time(NULL));
 }
 
+/* debuga variaveis do esquadrao*/
 void debug_squad(squad *s) {
 	
 	/* list iterator */
@@ -61,7 +63,10 @@ void init_squad(squad *s, int screenWidth, int screenHeight) {
 	s->wave = 1;
 }
 
+/* cria novo inimigo no squad */
 void new_enemy(squad *s, int screenWidth) {
+	
+	/* insere inimigo na lista */
 	object enemy;
 	init_alien(&enemy, s->next_enemy_x, s->next_enemy_y, s->enemy_size, RED);
 	insert(&s->aliens, enemy);
@@ -69,6 +74,7 @@ void new_enemy(squad *s, int screenWidth) {
 	/* update next enemy position */
 	s->next_enemy_x += s->enemy_distance;
 	
+	/* verifica se limite de inimigos na linha foi atingido */
 	if( s->next_enemy_x > screenWidth - s->quarter_screen ) {
 		/* next row */
 		s->next_enemy_y -= s->enemy_distance;
@@ -77,19 +83,24 @@ void new_enemy(squad *s, int screenWidth) {
 	}
 }
 
-/* inicializa lista de inimigos */
+/* gera wave de inimigos */
 void generate_squad(squad *s, int screenWidth) {
+	
+	/* para o numero de inimigos da wave, gera inimigos */
 	int i;
 	for(i = 0 ; i < s->numberOfAliens ; i++) {
 		new_enemy(s, screenWidth);
 	}
 }
 
+/* cria nova wave de inimigos */
 void next_wave (squad *s, int screenWidth, int screenHeight) {
 	
+	/* reseta variaveis de posição dos inimigos */
 	s->next_enemy_x = (float) s->quarter_screen;
 	s->next_enemy_y = (float) (screenHeight - screenHeight / 18);
 	
+	/* reseta variaveis do esquadrao */
 	s->rushing = 0;
 	s->numberOfRows = 0;
 	
@@ -99,33 +110,39 @@ void next_wave (squad *s, int screenWidth, int screenHeight) {
 	s->y_speed *= 1.1f;
 	s->wave ++;
 	
+	/* gera wave ! */
 	generate_squad(s, screenWidth);
 	
 }
 
+/* calcula a chance de um determinado inimigo do esquadrao s atirar */
 boolean will_shoot(squad *s) {
 	
+	/* calcula uma probabilidade de acordo com as variaveis do esquadrao
+	 * e verifica se essa chance é maior do que a necessária
+	 * para haver um diparo */
 	int number = random() % RAND_LIMIT;
-	
 	if( (float) number / RAND_LIMIT > 1.0f - CHANCE_TO_SHOOT )
 		return TRUE;
-		
 	else
 		return FALSE;
-	
 }
 
+/* calcula a chance de um determinado inimigo do esquadrao s 
+ * iniciar um ataque agressivo */
 boolean will_rush(squad *s) {
 	
+	/* calcula uma probabilidade de acordo com as variaveis do esquadrao
+	 * e verifica se essa chance é maior do que a necessária
+	 * para haver um ataque agressivo */
 	int number = random() % RAND_LIMIT;
-	
 	if( (float) number / RAND_LIMIT > 1.0f - CHANCE_TO_RUSH )
 		return TRUE;
-		
 	else
 		return FALSE;
 }
 
+/* desenha todos os aliens do esquadrao */
 void draw_squad(squad *s) {
 	
 	/* list iterator */
@@ -139,6 +156,7 @@ void draw_squad(squad *s) {
 	
 }
 
+/* desaloca a memoria utilizada pelo squad */
 void clear_squad(squad *s) {
 	clear_list(&s->aliens);
 }

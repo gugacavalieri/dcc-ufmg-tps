@@ -2,6 +2,7 @@ typedef struct struct_node *node_pointer;
 
 typedef struct struct_node {
 	object o;
+	/* lista duplamente encadeada */
 	node_pointer next;
 	node_pointer previous;
 } node;
