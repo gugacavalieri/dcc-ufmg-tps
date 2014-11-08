@@ -248,6 +248,12 @@ Vector Flock::get_leader_position() {
 	return this->leader.position;
 }
 
+void Flock::remove_boid() {
+	/* flock must have at least one boid */
+	if( boids.size() > 1)
+		this->boids.pop_back();
+}
+
 int Flock::generate_new_id() {
 	int old_id = this->idCounter;
 	this->idCounter++;

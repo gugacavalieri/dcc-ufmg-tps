@@ -52,6 +52,7 @@ public:
 	void draw_boids();
 
 	void add_new_boid();
+	void remove_boid();
 
 	void direct_boid_leader(int direction);
 

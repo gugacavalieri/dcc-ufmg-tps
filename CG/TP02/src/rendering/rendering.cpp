@@ -57,6 +57,7 @@ void processNormalInput(unsigned char key, int x, int y) {
 
 	/* remove boid from flock */
 	if(key == 'r') {
+		bflock.remove_boid();
 	}
 
 	if(key == 'q') {
