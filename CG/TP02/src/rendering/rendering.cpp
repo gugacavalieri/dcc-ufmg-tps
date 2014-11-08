@@ -4,6 +4,7 @@
  */
 
 #include <GL/glut.h>
+#include <stdio.h>
 #include "rendering.h"
 #include "../camera/Camera.h"
 #include "../model/Flock.h"
@@ -15,7 +16,8 @@ float window_aspect;
 
 World w;
 Flock bflock(w.getTowerHeight(), w.getWorldSize());
-Camera camera(Vector(10, 5, 50), Vector(0, 0, 0), Vector(0, 1, 0), w.getTowerHeight());
+Camera camera(Vector(10, 5, 50), Vector(0, 0, 0), Vector(0, 1, 0),
+		w.getTowerHeight());
 
 void render_scene() {
 
@@ -32,6 +34,37 @@ void render_scene() {
 
 	/* Não esperar! */
 	glFlush();
+
+}
+
+/* process keyboard input. receives key and mouse position */
+void processNormalInput(unsigned char key, int x, int y) {
+
+	// esc key code
+	if (key == ESC_KEY_CODE) {
+		exit(0);
+	}
+
+	if (key == 'c') {
+		camera.change_mode();
+	}
+
+	/* add new boid to flock */
+	if (key == 'a') {
+		bflock.add_new_boid();
+	}
+
+	/* remove boid from flock */
+	if(key == 'r') {
+	}
+
+	if(key == 'q') {
+		camera.zoom(ZOOM_OUT);
+	}
+
+	if(key == 'e') {
+		camera.zoom(ZOOM_IN);
+	}
 
 }
 
@@ -64,12 +97,6 @@ void init_rendering(int argc, char** argv) {
 	init_lighting();
 
 	bflock.add_new_boid();
-	bflock.add_new_boid();
-	bflock.add_new_boid();
-	bflock.add_new_boid();
-	bflock.add_new_boid();
-	bflock.add_new_boid();
-	bflock.add_new_boid();
 
 	// register callback functions
 	register_callbacks();
@@ -80,12 +107,8 @@ void init_rendering(int argc, char** argv) {
 void processArguments(int argc, char** argv) {
 	// check program arguments
 	if (argc != 3) {
-		/*
-		 printf(
-		 "Erro de parametros! Uso: ./galaxian <SCREEN WIDTH> <SCREEN HEIGHT>\n");
-		 printf(
-		 "Usando paremtros padrao! SCREEN WIDTH: 800 - SCREEN HEIGHT: 600\n");
-		 */
+		printf("Erro de parametros! Uso: ./galaxian <SCREEN WIDTH> <SCREEN HEIGHT>\n");
+		printf("Usando paremtros padrao! SCREEN WIDTH: 800 - SCREEN HEIGHT: 600\n");
 		screenWidth = DEFAULT_WIDTH;
 		screenHeight = DEFAULT_HEIGHT;
 	} else {
@@ -100,8 +123,7 @@ void reshape(int w, int h) {
 	glViewport(0, 0, (GLsizei) w, (GLsizei) h);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	//gluPerspective(1.0f, window_aspect, 1.5f, 1000.0f);
-	glFrustum (-1.0, 1.0, -1.0, 1.0, 1.5, 20000.0);
+	glFrustum(-1.0, 1.0, -1.0, 1.0, 1.5, 20000.0);
 	glMatrixMode(GL_MODELVIEW);
 
 }
@@ -109,8 +131,8 @@ void reshape(int w, int h) {
 /* register callback functions */
 void register_callbacks() {
 	glutDisplayFunc(render_scene);
-	glutReshapeFunc (reshape);
-//	glutKeyboardFunc(processNormalInput);
+	glutReshapeFunc(reshape);
+	glutKeyboardFunc(processNormalInput);
 //	glutSpecialFunc(processSpecialKeys);
 //	glutPassiveMotionFunc (mouseMotion);
 //	glutMouseFunc(processMouseClick);

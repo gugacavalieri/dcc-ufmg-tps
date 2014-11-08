@@ -12,6 +12,7 @@ World::World() {
 	this->tower_height = WORLD_HEIGHT;
 	this->tower_slice_stack = 20;
 	this->world_size = WORLD_BOUNDARIES;
+	fieldColor.changeColor(GREEN);
 }
 
 World::~World() {
@@ -29,7 +30,7 @@ void World::draw_world() {
 void World::draw_field() {
 
 	glBegin(GL_QUADS);
-	glColor3f(0.0f, 1.0f, 0.0f);
+	glColor3i(fieldColor.getRed(), fieldColor.getGreen(), fieldColor.getBlue());
 	glNormal3f(0.0f, 1.0f, 0.0f);
 	glVertex3f(-world_size, 0.0f, -world_size);
 	glVertex3f(world_size, 0.0f, -world_size);

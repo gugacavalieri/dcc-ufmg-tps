@@ -2,16 +2,6 @@
 #include "../rendering/rendering.h"
 #include "input.h"
 
-/* process keyboard input. receives key and mouse position */
-void processNormalInput(unsigned char key, int x, int y) {
-
-	// esc key code
-	if (key == ESC_KEY_CODE) {
-		exit(0);
-	}
-
-}
-
 void processSpecialKeys(int key, int x, int y) {
 
 }

@@ -17,6 +17,7 @@ Camera::Camera(const Vector &pos, const Vector &look, const Vector &normal, floa
 	this->window_aspect = 1;
 	this->central_tower_height = central_tower_height;
 	this->mode = 0;
+	this->camera_zoom = CAMERA_DISTANCE;
 }
 
 Camera::~Camera() {
@@ -45,12 +46,12 @@ void Camera::update_camera(Vector& target) {
 
 	/* behind flock viewing mode */
 	if(mode == 0) {
-		this->position = target + Vector(0, 0 , CAMERA_DISTANCE);
+		this->position = target - Vector(0, 0 , camera_zoom);
 	}
 
 	/* flock side viewing mode */
 	if(mode == 1) {
-		this->position = target + Vector(CAMERA_DISTANCE, 0 , 0);
+		this->position = target - Vector(camera_zoom, 0 , 0);
 	}
 
 	/* tower top viewing mode */
@@ -79,4 +80,19 @@ void Camera::look_at() {
 /* change camera viewing mode */
 void Camera::change_mode() {
 	this->mode = (this->mode +1) % CAMERA_MODES;
+}
+
+void Camera::zoom(int mode) {
+
+	/* zoom in or zoom out ? */
+	if( mode == ZOOM_IN ) {
+		if(this->camera_zoom > MIN_ZOOM)
+			this->camera_zoom -= 10;
+	}
+
+	else{
+		if(this->camera_zoom < MAX_ZOOM)
+			this->camera_zoom += 10;
+	}
+
 }

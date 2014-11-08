@@ -11,12 +11,13 @@
 #ifndef MODEL_FLOCK_H_
 #define MODEL_FLOCK_H_
 
-#define MAX_DISTANCE_FROM_FLOCK 100
+#define MAX_DISTANCE_FROM_FLOCK 30
 #define MAX_BOID_SPEED 1
-#define MAX_BOID_SIZE 20
-#define BOIDS_DISTANCE 10.0f
+#define MAX_BOID_SIZE 10
+#define MAX_BOID_DISTANCE 100
 #define NORMALIZE_FLOCK_RULES 2
 #define MIN_INITIAL_POS 100
+#define LEADER_SIZE 5
 
 #include <list>
 
@@ -50,6 +51,7 @@ private:
 	list<Boid> boids;
 	int idCounter;
 	Random rand;
+	Boid leader;
 
 	/* Rule 1: Boids try to fly towards the centre of mass of neighbouring boids */
 	Vector update_cohesion(Boid b);
@@ -57,6 +59,10 @@ private:
 	Vector update_separation(Boid b);
 	/* Rule 3: Boids try to match velocity with near boids */
 	Vector update_alignment(Boid b);
+	/* Rule 4: Tendency towards a particular place */
+	Vector follow_leader(Boid b);
+
+	int generate_new_id();
 
 };
 

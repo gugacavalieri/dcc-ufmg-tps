@@ -12,11 +12,12 @@
 #include "../util/vector.h"
 
 
-Boid::Boid(Vector pos, Vector speed, float size, int id) {
+Boid::Boid(Vector pos, Vector speed, float size, int id, int color) {
 	this->position = pos;
 	this->speed = speed;
 	this->size = size;
 	this->id = id;
+	this->boid_color.changeColor(color);
 }
 
 Boid::~Boid() {
@@ -44,7 +45,7 @@ void Boid::drawBoid() {
 	  glBegin(GL_QUADS);        // Draw The Cube Using quads
 
 	  	  //top
-	  	glColor3f(1.0f,0.0f,0.0f);
+	  	glColor3f(this->boid_color.getRed(), this->boid_color.getGreen(), this->boid_color.getBlue());
 	    glNormal3f(0.0f, 1.0f, 0.0f);
 	    glVertex3f( this->position.x + oneSize, this->position.y + oneSize, this->position.z - oneSize);
 	    glVertex3f( this->position.x - oneSize, this->position.y + oneSize, this->position.z - oneSize);
@@ -99,6 +100,10 @@ void Boid::setSize(float size) {
 	this->size = size;
 }
 
-void Boid::changeColor(int* color) {
-	this->color = color;
+Boid::Boid() {
+}
+
+/* change boid color */
+void Boid::changeColor(int color) {
+	this->boid_color.changeColor(color);
 }

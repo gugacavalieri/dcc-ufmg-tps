@@ -25,6 +25,8 @@ Flock::Flock(float central_tower_height, float world_size) {
 			rand.generate_random_f(0, central_tower_height),
 			rand.generate_random_f(MIN_INITIAL_POS, world_size));
 
+	this->leader = Boid(Vector(flock_center.x, flock_center.y, flock_center.z + 20.0f), Vector(0,0,3), LEADER_SIZE, generate_new_id(), WHITE);
+
 }
 
 Flock::~Flock() {
@@ -33,7 +35,10 @@ Flock::~Flock() {
 
 void Flock::update_boids() {
 
-	Vector rule1, rule2, rule3;
+	/* update leader position */
+	leader.position = leader.position + leader.speed;
+
+	Vector rule1, rule2, rule3, rule4;
 
 	list<Boid>::iterator i = boids.begin();
 	while (i != boids.end()) {
@@ -42,12 +47,14 @@ void Flock::update_boids() {
 		/* calculate flock variables */
 		if (boids.size() > 1) {
 			rule1 = update_cohesion(nextBoid);
-			rule2 = update_separation(nextBoid);
+			rule2 = update_separation(nextBoid) / 100;
 			rule3 = update_alignment(nextBoid);
 		}
 
+		rule4 = follow_leader(nextBoid);
+
 		/* update speed and position */
-		nextBoid.speed = nextBoid.speed + rule1 + rule2 + rule3;
+		nextBoid.speed = nextBoid.speed + rule1 + rule2 + rule3 + rule4;
 		nextBoid.speed = nextBoid.speed / NORMALIZE_FLOCK_RULES;
 		nextBoid.position = nextBoid.position + nextBoid.speed;
 
@@ -65,6 +72,9 @@ void Flock::update_boids() {
 }
 
 void Flock::draw_boids() {
+
+	/* draw leader boid */
+	leader.drawBoid();
 
 	/* draw every boid in the list!	*/
 	list<Boid>::iterator i = boids.begin();
@@ -104,7 +114,7 @@ Vector Flock::update_separation(Boid b) {
 
 			Vector posDifference = nextBoid.position - b.position;
 
-			if (posDifference.Length() < MAX_BOID_SIZE ) {
+			if (posDifference.Length() < MAX_BOID_DISTANCE ) {
 				result = result - posDifference;
 			}
 
@@ -131,7 +141,7 @@ void Flock::add_new_boid() {
 
 	float boid_size = rand.generate_random_f(0, max_boid_size);
 
-	Boid new_boid(boid_pos, boid_speed, boid_size, this->idCounter);
+	Boid new_boid(boid_pos, boid_speed, LEADER_SIZE, generate_new_id(), RED);
 
 //	printf(
 //			"generating new flock\n.pos: (%f,%f,%f), speed: (%f,%f,%f), size: %f\n",
@@ -198,4 +208,18 @@ void Flock::update_flock_variables() {
 	this->flock_center = position;
 	this->flock_speed = speed;
 
+}
+
+Vector Flock::follow_leader(Boid b) {
+
+	Vector place = leader.position;
+
+	return (place - b.position) / 100;
+
+}
+
+int Flock::generate_new_id() {
+	int old_id = this->idCounter;
+	this->idCounter++;
+	return old_id;
 }

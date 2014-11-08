@@ -9,18 +9,20 @@
 #define MODEL_BOID_H_
 
 #include "../util/vector.h"
+#include "../util/Color.h"
 
 class Boid {
 public:
 
 	Vector position;
 	Vector speed;
+	Color boid_color;
 	float size;
-	int *color;
 	int id;
 
 	/* contructor and destructor */
-	Boid(Vector pos, Vector speed, float size, int id);
+	Boid();
+	Boid(Vector pos, Vector speed, float size, int id, int color);
 	virtual ~Boid();
 
 	/* boid functions */
@@ -28,7 +30,7 @@ public:
 	void updatePosition(const Vector &v);
 	void updateSpeed(const Vector &v);
 	void setSize(float size);
-	void changeColor(int *color);
+	void changeColor(int color);
 
 };
 
