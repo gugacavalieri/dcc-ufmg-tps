@@ -26,9 +26,9 @@ void Color::changeColor(int color) {
 	}
 
 	if( color == GREEN ) {
-		this->red = 16;
-		this->green = 133;
-		this->blue = 47;
+		this->red = 0;
+		this->green = 255;
+		this->blue = 0;
 	}
 
 	if( color == BLUE ) {

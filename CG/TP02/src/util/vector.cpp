@@ -113,3 +113,14 @@ Vector Vector::operator=(const Vector& v)
   this->z = v.z;
   return *this;
 }
+
+Vector multiply(Vector v, const double d) {
+
+	Vector result;
+
+	result.x = v.x *d;
+	result.y = v.y *d;
+	result.z = v.z *d;
+
+	return result;
+}

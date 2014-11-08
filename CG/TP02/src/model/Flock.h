@@ -19,6 +19,13 @@
 #define MIN_INITIAL_POS 100
 #define LEADER_SIZE 5
 
+#define LEADER_SPEED 3
+
+#define LEFT 0
+#define RIGHT 1
+#define UP 2
+#define DOWN 3
+
 #include <list>
 
 #include "../util/vector.h"
@@ -46,12 +53,18 @@ public:
 
 	void add_new_boid();
 
+	void direct_boid_leader(int direction);
+
+	Vector get_leader_position();
+
+	Boid leader;
+
 private:
 
 	list<Boid> boids;
 	int idCounter;
 	Random rand;
-	Boid leader;
+
 
 	/* Rule 1: Boids try to fly towards the centre of mass of neighbouring boids */
 	Vector update_cohesion(Boid b);

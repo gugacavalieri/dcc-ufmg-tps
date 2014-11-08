@@ -40,18 +40,22 @@ void Camera::set_window_aspect(float window_aspect) {
 	this->window_aspect = window_aspect;
 }
 
-void Camera::update_camera(Vector& target) {
+void Camera::update_camera(Vector& target, Vector speed) {
 
 	this->lookingAt = target;
 
 	/* behind flock viewing mode */
 	if(mode == 0) {
-		this->position = target - Vector(0, 0 , camera_zoom);
+		this->position = target - multiply(speed, camera_zoom);
 	}
 
 	/* flock side viewing mode */
 	if(mode == 1) {
-		this->position = target - Vector(camera_zoom, 0 , 0);
+
+		/* normal vector to flock speed vector */
+		Vector normal_speed;
+		normal_speed = speed.Cross(Vector(0,1,0));
+		this->position = target - multiply(normal_speed, camera_zoom);
 	}
 
 	/* tower top viewing mode */

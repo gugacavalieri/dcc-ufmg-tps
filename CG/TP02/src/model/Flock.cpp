@@ -21,9 +21,9 @@ Flock::Flock(float central_tower_height, float world_size) {
 
 	/* initiate flock at a random point in world space */
 	this->flock_center = Vector(
-			rand.generate_random_f(MIN_INITIAL_POS, world_size),
-			rand.generate_random_f(0, central_tower_height),
-			rand.generate_random_f(MIN_INITIAL_POS, world_size));
+			rand.generate_random_f(MIN_INITIAL_POS, world_size/2),
+			rand.generate_random_f(0, central_tower_height/2),
+			rand.generate_random_f(MIN_INITIAL_POS, world_size/2));
 
 	this->leader = Boid(Vector(flock_center.x, flock_center.y, flock_center.z + 20.0f), Vector(0,0,3), LEADER_SIZE, generate_new_id(), WHITE);
 
@@ -216,6 +216,36 @@ Vector Flock::follow_leader(Boid b) {
 
 	return (place - b.position) / 100;
 
+}
+
+void Flock::direct_boid_leader(int direction) {
+
+	Vector normal_speed;
+
+	if(direction == RIGHT) {
+		normal_speed = this->leader.speed.Cross(Vector(0,1,0));
+	}
+
+	if(direction == LEFT) {
+		normal_speed = this->leader.speed.Cross(Vector(0,-1,0));
+	}
+
+	if(direction == UP) {
+		normal_speed = this->leader.speed.Cross(Vector(1,0,0));
+	}
+
+	if(direction == DOWN) {
+		normal_speed = this->leader.speed.Cross(Vector(-1,0,0));
+	}
+
+	normal_speed.Normalize();
+	normal_speed = normal_speed / NORMALIZE_FLOCK_RULES;
+
+	this->leader.speed = this->leader.speed + normal_speed;
+}
+
+Vector Flock::get_leader_position() {
+	return this->leader.position;
 }
 
 int Flock::generate_new_id() {

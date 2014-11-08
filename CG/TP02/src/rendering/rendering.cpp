@@ -9,6 +9,7 @@
 #include "../camera/Camera.h"
 #include "../model/Flock.h"
 #include "../model/World.h"
+#include "../util/vector.h"
 
 /* rendering variables */
 int screenWidth, screenHeight;
@@ -24,7 +25,7 @@ void render_scene() {
 	/* Limpar todos os pixels */
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	camera.update_camera(bflock.flock_center);
+	camera.update_camera(bflock.flock_center, bflock.leader.speed);
 	camera.look_at();
 
 	bflock.update_boids();
@@ -67,6 +68,25 @@ void processNormalInput(unsigned char key, int x, int y) {
 	}
 
 }
+
+void processSpecialKeys(int key, int x, int y) {
+
+	/* turn flock leader */
+	if( key == GLUT_KEY_LEFT ) {
+		bflock.direct_boid_leader(LEFT);
+	}
+	if( key == GLUT_KEY_RIGHT ) {
+		bflock.direct_boid_leader(RIGHT);
+	}
+	if( key == GLUT_KEY_UP ) {
+		bflock.direct_boid_leader(UP);
+	}
+	if( key == GLUT_KEY_DOWN ) {
+		bflock.direct_boid_leader(DOWN);
+	}
+
+}
+
 
 void init_lighting() {
 
@@ -133,7 +153,7 @@ void register_callbacks() {
 	glutDisplayFunc(render_scene);
 	glutReshapeFunc(reshape);
 	glutKeyboardFunc(processNormalInput);
-//	glutSpecialFunc(processSpecialKeys);
+	glutSpecialFunc(processSpecialKeys);
 //	glutPassiveMotionFunc (mouseMotion);
 //	glutMouseFunc(processMouseClick);
 }

@@ -37,5 +37,6 @@ public:
 };
 
 Vector vector_cross(const Vector &v1, const Vector &v2);
+Vector multiply(Vector v, const double d);
 
 #endif // VECTOR_H

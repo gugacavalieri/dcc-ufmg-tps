@@ -9,9 +9,9 @@
 #define CAMERA_H_
 
 #define CAMERA_MODES 3
-#define CAMERA_DISTANCE 250
-#define MIN_ZOOM 100
-#define MAX_ZOOM 500
+#define CAMERA_DISTANCE 100
+#define MIN_ZOOM 50
+#define MAX_ZOOM 150
 
 #define ZOOM_IN 0
 #define ZOOM_OUT 1
@@ -27,7 +27,7 @@ public:
 	void update_position(const Vector &v);
 	void update_lookingAt(const Vector &v);
 	void update_normal(const Vector &v);
-	void update_camera(Vector &target);
+	void update_camera(Vector &target, Vector speed);
 	void look_at();
 	void set_window_aspect(float window_aspect);
 	void change_mode();

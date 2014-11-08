@@ -2,10 +2,6 @@
 #include "../rendering/rendering.h"
 #include "input.h"
 
-void processSpecialKeys(int key, int x, int y) {
-
-}
-
 /* processa clicks do mouse */
 void processMouseClick(int button, int state, int x, int y) {
 
