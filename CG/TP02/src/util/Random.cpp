@@ -30,4 +30,11 @@ float Random::generate_random_f(int lb, int hb) {
 }
 
 int Random::generate_random_i(int lb, int hb) {
+
+	if( lb == hb )
+		return lb;
+
+	int random_number = lb + rand() % (hb-lb);
+
+	return random_number;
 }
