@@ -28,10 +28,10 @@ void render_scene() {
 	camera.update_camera(bflock.flock_center, bflock.leader.speed);
 	camera.look_at();
 
-	bflock.update_boids();
-	bflock.draw_boids();
-
 	w.draw_world();
+
+	bflock.update_boids(w.get_objects());
+	bflock.draw_boids();
 
 	/* Não esperar! */
 	glFlush();

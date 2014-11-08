@@ -15,6 +15,7 @@ World::World() {
 	fieldColor.changeColor(GREEN);
 	this->number_of_objects = rand.generate_random_i(MIN_NUMBER_OBJECTS, MAX_NUMBER_OBJECTS);
 
+
 	/* generate world objects */
 	generate_objects();
 }
@@ -25,8 +26,8 @@ World::~World() {
 
 void World::draw_world() {
 
-	draw_field();
 	draw_tower();
+	draw_field();
 	draw_walls();
 	draw_objects();
 
@@ -48,7 +49,7 @@ void World::draw_field() {
 void World::draw_tower() {
 
 	/* choose tower color */
-	glColor3f(255, 255, 255);
+	glColor3f(0.4, 0.4, 0.4);
 
 	/* rotates cone 90 degrees around 'x'*/
 	/* draw glut solid cone! */
@@ -100,7 +101,7 @@ void World::remove_object() {
 
 void World::draw_walls() {
 
-	glColor3f(0.0f, 0.0f, 1.0f);
+	glColor3f(0.0f, 0.5f, 1.0f);
 
 	glBegin(GL_QUADS);
 
@@ -146,6 +147,10 @@ void World::draw_objects() {
 		i++;
 	}
 
+}
+
+list<WorldObject> World::get_objects() {
+	return this->objects;
 }
 
 void World::generate_objects() {

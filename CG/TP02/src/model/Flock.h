@@ -18,6 +18,7 @@
 #define NORMALIZE_FLOCK_RULES 2
 #define MIN_INITIAL_POS 100
 #define LEADER_SIZE 5
+#define OBJECT_MIN_DISTANCE 1000
 
 #define LEADER_SPEED 3
 
@@ -31,6 +32,7 @@
 #include "../util/vector.h"
 #include "../util/Random.h"
 #include "Boid.h"
+#include "WorldObject.h"
 
 
 using namespace std;
@@ -47,7 +49,7 @@ public:
 	Flock(float central_tower_height, float world_size);
 	virtual ~Flock();
 
-	void update_boids();
+	void update_boids(list<WorldObject> objects);
 	void update_flock_variables();
 	void draw_boids();
 
@@ -66,7 +68,6 @@ private:
 	int idCounter;
 	Random rand;
 
-
 	/* Rule 1: Boids try to fly towards the centre of mass of neighbouring boids */
 	Vector update_cohesion(Boid b);
 	/* Rule 2: Boids try to keep a small distance away from other objects (including other boids) */
@@ -74,7 +75,9 @@ private:
 	/* Rule 3: Boids try to match velocity with near boids */
 	Vector update_alignment(Boid b);
 	/* Rule 4: Tendency towards a particular place */
-	Vector follow_leader(Boid b);
+	Vector tend_to_place(Boid b, Vector place);
+	/* Rule 5: Avoid objects */
+	Vector avoid_objects(Boid b, list<WorldObject> objects);
 
 	int generate_new_id();
 

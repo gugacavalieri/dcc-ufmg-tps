@@ -33,6 +33,7 @@ public:
 
 	void add_new_object(int type);
 	void remove_object();
+	list<WorldObject> get_objects();
 
 private:
 

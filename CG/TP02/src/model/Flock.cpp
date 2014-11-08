@@ -15,17 +15,19 @@ Flock::Flock(float central_tower_height, float world_size) {
 
 	//TODO: MAX DISTANCE FROM FLOCK
 	this->max_distance_from_flock = rand.generate_random_f(0,
-			MAX_DISTANCE_FROM_FLOCK);
+	MAX_DISTANCE_FROM_FLOCK);
 
 	this->max_boid_size = rand.generate_random_f(0, MAX_BOID_SIZE);
 
 	/* initiate flock at a random point in world space */
 	this->flock_center = Vector(
-			rand.generate_random_f(MIN_INITIAL_POS, world_size/2),
-			rand.generate_random_f(0, central_tower_height/2),
-			rand.generate_random_f(MIN_INITIAL_POS, world_size/2));
+			rand.generate_random_f(MIN_INITIAL_POS, world_size / 2),
+			rand.generate_random_f(0, central_tower_height / 2),
+			rand.generate_random_f(MIN_INITIAL_POS, world_size / 2));
 
-	this->leader = Boid(Vector(flock_center.x, flock_center.y, flock_center.z + 20.0f), Vector(0,0,3), LEADER_SIZE, generate_new_id(), WHITE);
+	this->leader = Boid(
+			Vector(flock_center.x, flock_center.y, flock_center.z + 20.0f),
+			Vector(0, 0, 3), LEADER_SIZE, generate_new_id(), WHITE);
 
 }
 
@@ -33,12 +35,12 @@ Flock::~Flock() {
 	// TODO Auto-generated destructor stub
 }
 
-void Flock::update_boids() {
+void Flock::update_boids(list<WorldObject> objects) {
 
 	/* update leader position */
 	leader.position = leader.position + leader.speed;
 
-	Vector rule1, rule2, rule3, rule4;
+	Vector rule1, rule2, rule3, rule4, rule5;
 
 	list<Boid>::iterator i = boids.begin();
 	while (i != boids.end()) {
@@ -51,10 +53,11 @@ void Flock::update_boids() {
 			rule3 = update_alignment(nextBoid);
 		}
 
-		rule4 = follow_leader(nextBoid);
+		rule4 = tend_to_place(nextBoid, leader.position);
+		rule5 = avoid_objects(nextBoid, objects);
 
 		/* update speed and position */
-		nextBoid.speed = nextBoid.speed + rule1 + rule2 + rule3 + rule4;
+		nextBoid.speed = nextBoid.speed + rule1 + rule2 + rule3 + rule4 + rule5;
 		nextBoid.speed = nextBoid.speed / NORMALIZE_FLOCK_RULES;
 		nextBoid.position = nextBoid.position + nextBoid.speed;
 
@@ -114,7 +117,7 @@ Vector Flock::update_separation(Boid b) {
 
 			Vector posDifference = nextBoid.position - b.position;
 
-			if (posDifference.Length() < MAX_BOID_DISTANCE ) {
+			if (posDifference.Length() < MAX_BOID_DISTANCE) {
 				result = result - posDifference;
 			}
 
@@ -210,11 +213,11 @@ void Flock::update_flock_variables() {
 
 }
 
-Vector Flock::follow_leader(Boid b) {
+Vector Flock::tend_to_place(Boid b, Vector place) {
 
-	Vector place = leader.position;
+	Vector result = place;
 
-	return (place - b.position) / 100;
+	return (result - b.position) / 100;
 
 }
 
@@ -222,20 +225,20 @@ void Flock::direct_boid_leader(int direction) {
 
 	Vector normal_speed;
 
-	if(direction == RIGHT) {
-		normal_speed = this->leader.speed.Cross(Vector(0,1,0));
+	if (direction == RIGHT) {
+		normal_speed = this->leader.speed.Cross(Vector(0, 1, 0));
 	}
 
-	if(direction == LEFT) {
-		normal_speed = this->leader.speed.Cross(Vector(0,-1,0));
+	if (direction == LEFT) {
+		normal_speed = this->leader.speed.Cross(Vector(0, -1, 0));
 	}
 
-	if(direction == UP) {
-		normal_speed = this->leader.speed.Cross(Vector(1,0,0));
+	if (direction == UP) {
+		normal_speed = this->leader.speed.Cross(Vector(1, 0, 0));
 	}
 
-	if(direction == DOWN) {
-		normal_speed = this->leader.speed.Cross(Vector(-1,0,0));
+	if (direction == DOWN) {
+		normal_speed = this->leader.speed.Cross(Vector(-1, 0, 0));
 	}
 
 	normal_speed.Normalize();
@@ -250,8 +253,31 @@ Vector Flock::get_leader_position() {
 
 void Flock::remove_boid() {
 	/* flock must have at least one boid */
-	if( boids.size() > 1)
+	if (boids.size() > 1)
 		this->boids.pop_back();
+}
+
+/* avoid world objects */
+Vector Flock::avoid_objects(Boid b, list<WorldObject> objects) {
+
+	Vector result;
+
+	/* draw every object in world	*/
+	list<WorldObject>::iterator i = objects.begin();
+	while (i != objects.end()) {
+		WorldObject currentObject = *i;
+
+		Vector posDifference = currentObject.get_center_of_mass() - b.position;
+
+		if (posDifference.Length() < OBJECT_MIN_DISTANCE + currentObject.get_size()) {
+			result = b.speed.Cross(Vector(0,1,0));
+		}
+
+		i++;
+	}
+
+	return result ;
+
 }
 
 int Flock::generate_new_id() {
