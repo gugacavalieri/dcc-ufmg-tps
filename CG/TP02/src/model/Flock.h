@@ -18,7 +18,9 @@
 #define NORMALIZE_FLOCK_RULES 2
 #define MIN_INITIAL_POS 100
 #define LEADER_SIZE 5
-#define OBJECT_MIN_DISTANCE 1000
+#define OBJECT_MIN_DISTANCE 1500
+
+#define MAX_INITIAL_BOIDS 20
 
 #define LEADER_SPEED 3
 
@@ -84,6 +86,7 @@ private:
 	Vector avoid_objects(Boid b, list<WorldObject> objects);
 
 	int generate_new_id();
+	void populate_flock();
 
 };
 

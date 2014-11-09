@@ -166,8 +166,6 @@ void init_rendering(int argc, char** argv) {
 	init_lighting();
 	//init_fog();
 
-	bflock.add_new_boid();
-
 	// register callback functions
 	register_callbacks();
 

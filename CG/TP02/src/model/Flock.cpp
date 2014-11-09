@@ -32,6 +32,8 @@ Flock::Flock(float central_tower_height, float world_size) {
 	this->x_rotation = 0;
 	this->y_rotation = 0;
 
+	populate_flock();
+
 }
 
 Flock::~Flock() {
@@ -313,5 +315,16 @@ void Flock::debug_flock() {
 			currentBoid.debug_boid();
 			i++;
 		}
+
+}
+
+void Flock::populate_flock() {
+
+	int i;
+	int num_boids = rand.generate_random_i(0, MAX_INITIAL_BOIDS);
+
+	for(i = 0 ; i < num_boids ; i++) {
+		add_new_boid();
+	}
 
 }

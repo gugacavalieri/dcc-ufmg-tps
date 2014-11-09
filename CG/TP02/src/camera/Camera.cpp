@@ -52,6 +52,8 @@ void Camera::update_camera(Vector& target, Vector speed) {
 	/* flock side viewing mode */
 	if(mode == 1) {
 
+		camera_zoom = MAX_ZOOM;
+
 		/* normal vector to flock speed vector */
 		Vector normal_speed;
 		normal_speed = speed.Cross(Vector(0,1,0));
