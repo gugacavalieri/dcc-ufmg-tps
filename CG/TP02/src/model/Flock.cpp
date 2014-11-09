@@ -82,7 +82,7 @@ void Flock::draw_boids() {
 	/* draw every boid in the list!	*/
 	list<Boid>::iterator i = boids.begin();
 	while (i != boids.end()) {
-		Boid nextBoid = *i;
+		Boid &nextBoid = *i;
 		nextBoid.drawBoid();
 		i++;
 	}

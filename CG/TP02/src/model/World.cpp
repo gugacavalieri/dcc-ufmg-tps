@@ -15,7 +15,6 @@ World::World() {
 	fieldColor.changeColor(GREEN);
 	this->number_of_objects = rand.generate_random_i(MIN_NUMBER_OBJECTS, MAX_NUMBER_OBJECTS);
 
-
 	/* generate world objects */
 	generate_objects();
 }

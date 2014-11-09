@@ -18,6 +18,9 @@ Boid::Boid(Vector pos, Vector speed, float size, int id, int color) {
 	this->size = size;
 	this->id = id;
 	this->boid_color.changeColor(color);
+	this->wing_animation = 0;
+	this->wing_up = true;
+
 }
 
 Boid::~Boid() {
@@ -25,27 +28,40 @@ Boid::~Boid() {
 
 void Boid::drawBoid() {
 
+	draw_body();
+	draw_wings();
+
+}
+
+void Boid::updatePosition(const Vector& v) {
+	this->position = this->position + v;
+}
+
+void Boid::updateSpeed(const Vector& v) {
+	this->speed = v;
+}
+
+void Boid::setSize(float size) {
+	this->size = size;
+}
+
+Boid::Boid() {
+}
+
+/* change boid color */
+void Boid::changeColor(int color) {
+	this->boid_color.changeColor(color);
+}
+
+void Boid::draw_body() {
+
 	float oneSize = this->size;
 	float twiceSize = (float) this->size * 2;
 
-	Vector normal_face;
+	glBegin(GL_QUADS);        // Draw The Cube Using quads
 
-	// TODO: DRAW BOID
-	//glColor3f(1,0,0);
-//	glBegin(GL_POLYGON);
-//		glNormal3f(this->position.x, this->position.y, this->position.z - 1.0f);
-//		glVertex3f(this->position.x - oneSize, this->position.y - oneSize, 0.0f);
-//		glVertex3f(this->position.x + oneSize, this->position.y - oneSize, 0.0f);
-//		glVertex3f(this->position.x + oneSize, this->position.y + oneSize, 0.0f);
-//		glVertex3f(this->position.x - oneSize, this->position.y + oneSize, 0.0f);
-//		glNormal3f(this->position.x, this->position.y, this->position.z + 1.0f);
-//		glVertex3f(this->position.x , this->position.y, this->position.z + twiceSize);
-//	glEnd();
-
-	  glBegin(GL_QUADS);        // Draw The Cube Using quads
-
-	  	  //top
-	  	glColor3f(this->boid_color.getRed(), this->boid_color.getGreen(), this->boid_color.getBlue());
+	  	//top
+	  	glColor3f(1.0f, 0.2f, 0.2f);
 	    glNormal3f(0.0f, 1.0f, 0.0f);
 	    glVertex3f( this->position.x + oneSize, this->position.y + oneSize, this->position.z - oneSize);
 	    glVertex3f( this->position.x - oneSize, this->position.y + oneSize, this->position.z - oneSize);
@@ -84,26 +100,66 @@ void Boid::drawBoid() {
 	    glVertex3f( this->position.x + oneSize, this->position.y + oneSize, this->position.z + oneSize);
 	    glVertex3f( this->position.x + oneSize, this->position.y - oneSize, this->position.z + oneSize);
 	    glVertex3f( this->position.x + oneSize, this->position.y - oneSize, this->position.z - oneSize);
-	  glEnd();            // End Drawing The Cube - See more at: http://www.codemiles.com/c-opengl-examples/draw-3d-cube-using-opengl-t9018.html#sthash.1j1Un7PS.dpuf
-
+	  glEnd();
 }
 
-void Boid::updatePosition(const Vector& v) {
-	this->position = this->position + v;
-}
+void Boid::draw_wings() {
 
-void Boid::updateSpeed(const Vector& v) {
-	this->speed = v;
-}
+	float oneSize = this->size;
+	float half_size = this->size / 2;
+	float wing_size = this->size / 5;
+	float wing_height = this->size / 7;
 
-void Boid::setSize(float size) {
-	this->size = size;
-}
+	Vector leftWall(this->position.x + oneSize, this->position.y, this->position.z);
 
-Boid::Boid() {
-}
+	/* left wing */
+	glBegin(GL_POLYGON);
 
-/* change boid color */
-void Boid::changeColor(int color) {
-	this->boid_color.changeColor(color);
+		glNormal3f(0, -1, 0);
+		glVertex3f(leftWall.x, leftWall.y + wing_height, leftWall.z - wing_size);
+		glVertex3f(leftWall.x, leftWall.y + wing_height, leftWall.z + wing_size);
+		glVertex3f(leftWall.x, leftWall.y - wing_height, leftWall.z + wing_size);
+		glVertex3f(leftWall.x, leftWall.y - wing_height, leftWall.z - wing_size);
+
+		glVertex3f(leftWall.x + oneSize, leftWall.y + wing_height + this->wing_animation, leftWall.z - wing_size);
+		glVertex3f(leftWall.x + oneSize, leftWall.y + wing_height + this->wing_animation, leftWall.z + wing_size);
+		glVertex3f(leftWall.x + oneSize, leftWall.y - wing_height + this->wing_animation, leftWall.z + wing_size);
+		glVertex3f(leftWall.x + oneSize, leftWall.y - wing_height + this->wing_animation, leftWall.z - wing_size);
+
+	glEnd();
+
+
+	Vector rightWall(this->position.x - oneSize, this->position.y, this->position.z);
+
+	/* right wing */
+	glBegin(GL_POLYGON);
+
+		glNormal3f(0, -1, 0);
+		glVertex3f(rightWall.x, leftWall.y + wing_height, leftWall.z - wing_size);
+		glVertex3f(rightWall.x, leftWall.y + wing_height, leftWall.z + wing_size);
+		glVertex3f(rightWall.x, leftWall.y - wing_height, leftWall.z + wing_size);
+		glVertex3f(rightWall.x, leftWall.y - wing_height, leftWall.z - wing_size);
+
+		glVertex3f(rightWall.x - oneSize, leftWall.y + wing_height + this->wing_animation, leftWall.z - wing_size);
+		glVertex3f(rightWall.x - oneSize, leftWall.y + wing_height + this->wing_animation, leftWall.z + wing_size);
+		glVertex3f(rightWall.x - oneSize, leftWall.y - wing_height + this->wing_animation, leftWall.z + wing_size);
+		glVertex3f(rightWall.x - oneSize, leftWall.y - wing_height + this->wing_animation, leftWall.z - wing_size);
+
+	glEnd();
+
+
+	if(this->wing_animation < oneSize && this->wing_up) {
+		this->wing_animation += 0.1f;
+	}
+	else {
+		this->wing_up = false;
+
+		if( this->wing_animation > -oneSize && !this->wing_up ) {
+			this->wing_animation -= 0.1f;
+		}
+		else{
+			this->wing_up = true;
+		}
+	}
+
 }

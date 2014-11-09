@@ -32,6 +32,14 @@ public:
 	void setSize(float size);
 	void changeColor(int color);
 
+private:
+
+	float wing_animation;
+	bool wing_up;
+
+	void draw_body();
+	void draw_wings();
+
 };
 
 #endif /* MODEL_BOID_H_ */

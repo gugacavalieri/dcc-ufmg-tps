@@ -20,6 +20,8 @@ Flock bflock(w.getTowerHeight(), w.getWorldSize());
 Camera camera(Vector(10, 5, 50), Vector(0, 0, 0), Vector(0, 1, 0),
 		w.getTowerHeight());
 
+static GLint fogMode;
+
 void render_scene() {
 
 	/* Limpar todos os pixels */
@@ -101,6 +103,22 @@ void init_lighting() {
 
 }
 
+void init_fog() {
+	   glEnable(GL_FOG);
+	   {
+	      GLfloat fogColor[4] = {0.5, 0.5, 0.5, 1.0};
+
+	      fogMode = GL_EXP;
+	      glFogi (GL_FOG_MODE, fogMode);
+	      glFogfv (GL_FOG_COLOR, fogColor);
+	      glFogf (GL_FOG_DENSITY, 0.1);
+	      glHint (GL_FOG_HINT, GL_DONT_CARE);
+	      glFogf (GL_FOG_START, 1.0);
+	      glFogf (GL_FOG_END, 2000.0);
+	   }
+	   glClearColor(0.5, 0.5, 0.5, 1.0);  /* fog color */
+}
+
 void init_rendering(int argc, char** argv) {
 
 	// init window size
@@ -116,6 +134,7 @@ void init_rendering(int argc, char** argv) {
 	glutCreateWindow("VBoids");
 
 	init_lighting();
+	//init_fog();
 
 	bflock.add_new_boid();
 
