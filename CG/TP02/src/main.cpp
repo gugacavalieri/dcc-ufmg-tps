@@ -7,7 +7,6 @@
 #include <GL/glut.h>
 
 #include "rendering/rendering.h"
-#include "control/objectController.h"
 
 int main(int argc, char **argv) {
 

@@ -11,7 +11,7 @@
 #ifndef MODEL_FLOCK_H_
 #define MODEL_FLOCK_H_
 
-#define MAX_DISTANCE_FROM_FLOCK 30
+#define MAX_DISTANCE_FROM_FLOCK 100
 #define MAX_BOID_SPEED 1
 #define MAX_BOID_SIZE 10
 #define MAX_BOID_DISTANCE 100
@@ -57,8 +57,9 @@ public:
 	void remove_boid();
 
 	void direct_boid_leader(int direction);
-
 	Vector get_leader_position();
+
+	void debug_flock();
 
 	Boid leader;
 
@@ -67,6 +68,9 @@ private:
 	list<Boid> boids;
 	int idCounter;
 	Random rand;
+
+	float y_rotation;
+	float x_rotation;
 
 	/* Rule 1: Boids try to fly towards the centre of mass of neighbouring boids */
 	Vector update_cohesion(Boid b);

@@ -29,6 +29,9 @@ Flock::Flock(float central_tower_height, float world_size) {
 			Vector(flock_center.x, flock_center.y, flock_center.z + 20.0f),
 			Vector(0, 0, 3), LEADER_SIZE, generate_new_id(), WHITE);
 
+	this->x_rotation = 0;
+	this->y_rotation = 0;
+
 }
 
 Flock::~Flock() {
@@ -56,6 +59,12 @@ void Flock::update_boids(list<WorldObject> objects) {
 		rule4 = tend_to_place(nextBoid, leader.position);
 		rule5 = avoid_objects(nextBoid, objects);
 
+		Vector new_speed = nextBoid.speed + rule1 + rule2 + rule3 + rule4
+				+ rule5;
+		float angle = new_speed.AngleBetween(nextBoid.speed);
+
+		/* rotate boid if direction changed */
+//		nextBoid.set_rotation(angle, X_AXIS);
 		/* update speed and position */
 		nextBoid.speed = nextBoid.speed + rule1 + rule2 + rule3 + rule4 + rule5;
 		nextBoid.speed = nextBoid.speed / NORMALIZE_FLOCK_RULES;
@@ -151,11 +160,11 @@ void Flock::add_new_boid() {
 //			boid_pos.x, boid_pos.y, boid_pos.z, boid_speed.x, boid_speed.y,
 //			boid_speed.z, boid_size);
 
-	printf(
-			"generating new flock\n.pos: (%f,%f,%f), speed: (%f,%f,%f), size: %f\n",
-			new_boid.position.x, new_boid.position.y, new_boid.position.z,
-			new_boid.speed.x, new_boid.speed.y, new_boid.speed.z,
-			new_boid.size);
+//	printf(
+//			"generating new flock\n.pos: (%f,%f,%f), speed: (%f,%f,%f), size: %f\n",
+//			new_boid.position.x, new_boid.position.y, new_boid.position.z,
+//			new_boid.speed.x, new_boid.speed.y, new_boid.speed.z,
+//			new_boid.size);
 
 	boids.push_back(new_boid);
 
@@ -241,6 +250,9 @@ void Flock::direct_boid_leader(int direction) {
 		normal_speed = this->leader.speed.Cross(Vector(-1, 0, 0));
 	}
 
+	this->x_rotation = normal_speed.x - leader.speed.x;
+	this->y_rotation = normal_speed.y - leader.speed.y;
+
 	normal_speed.Normalize();
 	normal_speed = normal_speed / NORMALIZE_FLOCK_RULES;
 
@@ -269,14 +281,15 @@ Vector Flock::avoid_objects(Boid b, list<WorldObject> objects) {
 
 		Vector posDifference = currentObject.get_center_of_mass() - b.position;
 
-		if (posDifference.Length() < OBJECT_MIN_DISTANCE + currentObject.get_size()) {
-			result = b.speed.Cross(Vector(0,1,0));
+		if (posDifference.Length()
+				< OBJECT_MIN_DISTANCE + currentObject.get_size()) {
+			result = b.speed.Cross(Vector(0, 1, 0));
 		}
 
 		i++;
 	}
 
-	return result ;
+	return result;
 
 }
 
@@ -284,4 +297,21 @@ int Flock::generate_new_id() {
 	int old_id = this->idCounter;
 	this->idCounter++;
 	return old_id;
+}
+
+void Flock::debug_flock() {
+
+	/* print flock values */
+	printf("#### DEBUGING FLOCK ####\n");
+	printf("Boids counter: %d | flock center: (%3f,%3f,%3f)\n", boids.size(),
+			flock_center.x, flock_center.y, flock_center.z);
+
+	/* print every boid variables */
+	list<Boid>::iterator i = boids.begin();
+		while (i != boids.end()) {
+			Boid currentBoid = *i;
+			currentBoid.debug_boid();
+			i++;
+		}
+
 }

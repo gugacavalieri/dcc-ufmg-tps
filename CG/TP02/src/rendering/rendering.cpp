@@ -20,6 +20,10 @@ Flock bflock(w.getTowerHeight(), w.getWorldSize());
 Camera camera(Vector(10, 5, 50), Vector(0, 0, 0), Vector(0, 1, 0),
 		w.getTowerHeight());
 
+/* control variables */
+int debug = 0;
+bool nextFrame = false;
+
 static GLint fogMode;
 
 void render_scene() {
@@ -27,17 +31,32 @@ void render_scene() {
 	/* Limpar todos os pixels */
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	camera.update_camera(bflock.flock_center, bflock.leader.speed);
 	camera.look_at();
 
 	w.draw_world();
 
-	bflock.update_boids(w.get_objects());
 	bflock.draw_boids();
 
 	/* Não esperar! */
 	glFlush();
 
+}
+
+void main_loop(int data) {
+
+	glutTimerFunc(REFRESH_RATE, main_loop, 1);
+
+	/* check if debug mode is active */
+	if(! debug || nextFrame) {
+		camera.update_camera(bflock.flock_center, bflock.leader.speed);
+		bflock.update_boids(w.get_objects());
+	}
+	if( debug && nextFrame ) {
+		bflock.debug_flock();
+		nextFrame = false;
+	}
+
+	glutPostRedisplay();
 }
 
 /* process keyboard input. receives key and mouse position */
@@ -68,6 +87,17 @@ void processNormalInput(unsigned char key, int x, int y) {
 
 	if(key == 'e') {
 		camera.zoom(ZOOM_IN);
+	}
+
+	/* activate debug mode */
+	if( key == 'd' ) {
+		debug = (debug + 1) % 2;
+		nextFrame = true;
+	}
+
+	/* advance frame */
+	if( key == 'n' ) {
+		nextFrame = true;
 	}
 
 }

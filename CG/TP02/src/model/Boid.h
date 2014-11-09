@@ -11,6 +11,11 @@
 #include "../util/vector.h"
 #include "../util/Color.h"
 
+/* rotation axis */
+#define X_AXIS 0
+#define Y_AXIS 1
+#define Z_AXIS 2
+
 class Boid {
 public:
 
@@ -31,11 +36,15 @@ public:
 	void updateSpeed(const Vector &v);
 	void setSize(float size);
 	void changeColor(int color);
+	void debug_boid();
 
 private:
 
 	float wing_animation;
 	bool wing_up;
+
+	float rotation;
+	int rotation_axis;
 
 	void draw_body();
 	void draw_wings();
