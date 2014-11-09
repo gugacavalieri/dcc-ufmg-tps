@@ -33,6 +33,11 @@ public:
 	void change_mode();
 	void zoom(int mode);
 
+	void debug_camera();
+
+	float getCameraZoom();
+	int getMode();
+
 private:
 	Vector position;
 	Vector lookingAt;

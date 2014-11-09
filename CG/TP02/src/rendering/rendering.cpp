@@ -23,8 +23,9 @@ Camera camera(Vector(10, 5, 50), Vector(0, 0, 0), Vector(0, 1, 0),
 /* control variables */
 int debug = 0;
 bool nextFrame = false;
+bool fog_enabled = false;
 
-static GLint fogMode;
+float fog_density = FOG_DENSITY;
 
 void render_scene() {
 
@@ -32,9 +33,7 @@ void render_scene() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	camera.look_at();
-
 	w.draw_world();
-
 	bflock.draw_boids();
 
 	/* Não esperar! */
@@ -47,16 +46,38 @@ void main_loop(int data) {
 	glutTimerFunc(REFRESH_RATE, main_loop, 1);
 
 	/* check if debug mode is active */
-	if(! debug || nextFrame) {
+	if (!debug || nextFrame) {
 		camera.update_camera(bflock.flock_center, bflock.leader.speed);
 		bflock.update_boids(w.get_objects());
 	}
-	if( debug && nextFrame ) {
+	if (debug && nextFrame) {
 		bflock.debug_flock();
+		w.debug_world();
+		camera.debug_camera();
 		nextFrame = false;
 	}
 
 	glutPostRedisplay();
+}
+
+void enable_fog() {
+
+	GLfloat density = fog_density;
+
+	GLfloat fogColor[4] = { 0.5, 0.5, 0.5, 1.0 };
+
+	glEnable(GL_FOG);
+	glFogi(GL_FOG_MODE, GL_EXP2);
+	glFogfv(GL_FOG_COLOR, fogColor);
+	glFogf(GL_FOG_DENSITY, density);
+	glHint(GL_FOG_HINT, GL_NICEST);
+
+}
+
+void disable_fog() {
+
+	glDisable(GL_FOG);
+
 }
 
 /* process keyboard input. receives key and mouse position */
@@ -77,27 +98,38 @@ void processNormalInput(unsigned char key, int x, int y) {
 	}
 
 	/* remove boid from flock */
-	if(key == 'r') {
+	if (key == 'r') {
 		bflock.remove_boid();
 	}
 
-	if(key == 'q') {
+	if (key == 'q') {
 		camera.zoom(ZOOM_OUT);
 	}
 
-	if(key == 'e') {
+	if (key == 'e') {
 		camera.zoom(ZOOM_IN);
 	}
 
 	/* activate debug mode */
-	if( key == 'd' ) {
+	if (key == 'd') {
 		debug = (debug + 1) % 2;
 		nextFrame = true;
 	}
 
 	/* advance frame */
-	if( key == 'n' ) {
+	if (key == 'n') {
 		nextFrame = true;
+	}
+
+	/* enable-disable fog */
+	if (key == 'f') {
+		if (fog_enabled) {
+			disable_fog();
+			fog_enabled = false;
+		} else {
+			enable_fog();
+			fog_enabled = true;
+		}
 	}
 
 }
@@ -105,21 +137,30 @@ void processNormalInput(unsigned char key, int x, int y) {
 void processSpecialKeys(int key, int x, int y) {
 
 	/* turn flock leader */
-	if( key == GLUT_KEY_LEFT ) {
+	if (key == GLUT_KEY_LEFT) {
 		bflock.direct_boid_leader(LEFT);
 	}
-	if( key == GLUT_KEY_RIGHT ) {
+	if (key == GLUT_KEY_RIGHT) {
 		bflock.direct_boid_leader(RIGHT);
 	}
-	if( key == GLUT_KEY_UP ) {
+	if (key == GLUT_KEY_UP) {
 		bflock.direct_boid_leader(UP);
 	}
-	if( key == GLUT_KEY_DOWN ) {
+	if (key == GLUT_KEY_DOWN) {
 		bflock.direct_boid_leader(DOWN);
 	}
 
-}
+	/* change fog density */
+	if (key == GLUT_KEY_F1) {
+		fog_density -= 0.00001;
+		printf("# Fog Density: %3f\n", fog_density);
+	}
+	if (key == GLUT_KEY_F2) {
+		fog_density += 0.00001;
+		printf("# Fog Density: %3f\n", fog_density);
+	}
 
+}
 
 void init_lighting() {
 
@@ -131,22 +172,6 @@ void init_lighting() {
 	glEnable(GL_LIGHT0);
 	glEnable(GL_COLOR_MATERIAL);
 
-}
-
-void init_fog() {
-	   glEnable(GL_FOG);
-	   {
-	      GLfloat fogColor[4] = {0.5, 0.5, 0.5, 1.0};
-
-	      fogMode = GL_EXP;
-	      glFogi (GL_FOG_MODE, fogMode);
-	      glFogfv (GL_FOG_COLOR, fogColor);
-	      glFogf (GL_FOG_DENSITY, 0.1);
-	      glHint (GL_FOG_HINT, GL_DONT_CARE);
-	      glFogf (GL_FOG_START, 1.0);
-	      glFogf (GL_FOG_END, 2000.0);
-	   }
-	   glClearColor(0.5, 0.5, 0.5, 1.0);  /* fog color */
 }
 
 void init_rendering(int argc, char** argv) {
@@ -164,7 +189,6 @@ void init_rendering(int argc, char** argv) {
 	glutCreateWindow("VBoids");
 
 	init_lighting();
-	//init_fog();
 
 	// register callback functions
 	register_callbacks();
@@ -175,8 +199,10 @@ void init_rendering(int argc, char** argv) {
 void processArguments(int argc, char** argv) {
 	// check program arguments
 	if (argc != 3) {
-		printf("Erro de parametros! Uso: ./galaxian <SCREEN WIDTH> <SCREEN HEIGHT>\n");
-		printf("Usando paremtros padrao! SCREEN WIDTH: 800 - SCREEN HEIGHT: 600\n");
+		printf(
+				"Erro de parametros! Uso: ./galaxian <SCREEN WIDTH> <SCREEN HEIGHT>\n");
+		printf(
+				"Usando paremtros padrao! SCREEN WIDTH: 800 - SCREEN HEIGHT: 600\n");
 		screenWidth = DEFAULT_WIDTH;
 		screenHeight = DEFAULT_HEIGHT;
 	} else {

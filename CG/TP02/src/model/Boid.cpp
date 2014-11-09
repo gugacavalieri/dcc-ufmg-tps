@@ -77,7 +77,7 @@ void Boid::draw_body() {
 	glBegin(GL_QUADS);        // Draw The Cube Using quads
 
 	//top
-	glColor3f(1.0f, 0.2f, 0.2f);
+	glColor3f(boid_color.getRed(), boid_color.getGreen(), boid_color.getBlue());
 	glNormal3f(0.0f, 1.0f, 0.0f);
 	glVertex3f(this->position.x + oneSize, this->position.y + oneSize,
 			this->position.z - oneSize);

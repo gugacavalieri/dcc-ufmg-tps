@@ -33,6 +33,9 @@ public:
 
 	void add_new_object(int type);
 	void remove_object();
+
+	void debug_world();
+
 	list<WorldObject> get_objects();
 
 private:

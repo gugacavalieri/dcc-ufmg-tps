@@ -72,11 +72,6 @@ void Flock::update_boids(list<WorldObject> objects) {
 		nextBoid.speed = nextBoid.speed / NORMALIZE_FLOCK_RULES;
 		nextBoid.position = nextBoid.position + nextBoid.speed;
 
-//		printf("updating boid %d\n.pos: (%f,%f,%f), speed: (%f,%f,%f)\n",
-//				nextBoid.id, nextBoid.position.x, nextBoid.position.y,
-//				nextBoid.position.z, nextBoid.speed.x, nextBoid.speed.y,
-//				nextBoid.speed.z);
-
 		i++;
 	}
 
@@ -157,20 +152,7 @@ void Flock::add_new_boid() {
 
 	Boid new_boid(boid_pos, boid_speed, LEADER_SIZE, generate_new_id(), RED);
 
-//	printf(
-//			"generating new flock\n.pos: (%f,%f,%f), speed: (%f,%f,%f), size: %f\n",
-//			boid_pos.x, boid_pos.y, boid_pos.z, boid_speed.x, boid_speed.y,
-//			boid_speed.z, boid_size);
-
-//	printf(
-//			"generating new flock\n.pos: (%f,%f,%f), speed: (%f,%f,%f), size: %f\n",
-//			new_boid.position.x, new_boid.position.y, new_boid.position.z,
-//			new_boid.speed.x, new_boid.speed.y, new_boid.speed.z,
-//			new_boid.size);
-
 	boids.push_back(new_boid);
-
-	this->idCounter++;
 
 }
 
@@ -214,10 +196,6 @@ void Flock::update_flock_variables() {
 	/* get average position and speed */
 	position = position / boids.size();
 	speed = speed / boids.size();
-
-	printf("updating flock variables\n");
-	printf(".pos: (%f,%f,%f), speed: (%f,%f,%f)\n", position.x, position.y,
-			position.z, speed.x, speed.y, speed.z);
 
 	this->flock_center = position;
 	this->flock_speed = speed;
@@ -321,7 +299,7 @@ void Flock::debug_flock() {
 void Flock::populate_flock() {
 
 	int i;
-	int num_boids = rand.generate_random_i(0, MAX_INITIAL_BOIDS);
+	int num_boids = rand.generate_random_i(5, MAX_INITIAL_BOIDS);
 
 	for(i = 0 ; i < num_boids ; i++) {
 		add_new_boid();

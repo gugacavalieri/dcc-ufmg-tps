@@ -14,6 +14,8 @@
 #define WHITE 3
 #define YELLOW 4
 
+#define RGB_LIMIT 255
+
 class Color {
 public:
 
@@ -24,9 +26,9 @@ public:
 	void changeColor(int color);
 
 	/* get values */
-	int getRed();
-	int getGreen();
-	int getBlue();
+	float getRed();
+	float getGreen();
+	float getBlue();
 
 private:
 	int red;

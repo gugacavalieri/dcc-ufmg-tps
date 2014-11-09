@@ -6,6 +6,7 @@
 #include "World.h"
 
 #include <GL/glut.h>
+#include <stdio.h>
 
 World::World() {
 	this->tower_base = 200.0f;
@@ -85,7 +86,7 @@ void World::add_new_object(int type) {
 				rand.generate_random_f(-world_size, world_size));
 	}
 
-	WorldObject new_object(position, type, objectSize, 30, WHITE);
+	WorldObject new_object(position, type, objectSize, 30, YELLOW);
 
 	objects.push_back(new_object);
 
@@ -150,6 +151,21 @@ void World::draw_objects() {
 
 list<WorldObject> World::get_objects() {
 	return this->objects;
+}
+
+void World::debug_world() {
+
+	printf("#### DEBUGING WORLD ####\n");
+	printf("Number of objects: %d\n", number_of_objects);
+
+	/* debug every object in the list!	*/
+	list<WorldObject>::iterator i = objects.begin();
+	while (i != objects.end()) {
+		WorldObject currentObject = *i;
+		currentObject.debug_object();
+		i++;
+	}
+
 }
 
 void World::generate_objects() {

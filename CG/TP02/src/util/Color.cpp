@@ -26,7 +26,7 @@ void Color::changeColor(int color) {
 	}
 
 	if( color == GREEN ) {
-		this->red = 0;
+		this->red = 48;
 		this->green = 255;
 		this->blue = 0;
 	}
@@ -50,16 +50,16 @@ void Color::changeColor(int color) {
 	}
 }
 
-int Color::getRed() {
-	return this->red;
+float Color::getRed() {
+	return (float) this->red / RGB_LIMIT;
 }
 
-int Color::getGreen() {
-	return this->green;
+float Color::getGreen() {
+	return (float) this->green / RGB_LIMIT;
 }
 
-int Color::getBlue() {
-	return this->blue;
+float Color::getBlue() {
+	return (float) this->blue / RGB_LIMIT;
 }
 
 Color::Color() {

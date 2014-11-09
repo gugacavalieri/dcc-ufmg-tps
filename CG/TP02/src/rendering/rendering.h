@@ -11,6 +11,8 @@
 #define ESC_KEY_CODE 27
 #define REFRESH_RATE 15 // screen refresh rate (mseconds)
 
+#define FOG_DENSITY 0.00025f
+
 void main_loop(int data);
 
 /* rendering methods */
