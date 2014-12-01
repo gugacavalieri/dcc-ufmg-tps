@@ -11,6 +11,7 @@
 
 #include "../util/vector.h"
 
+/* boid constructor */
 Boid::Boid(Vector pos, Vector speed, float size, int id, int color) {
 	this->position = pos;
 	this->speed = speed;
@@ -20,9 +21,9 @@ Boid::Boid(Vector pos, Vector speed, float size, int id, int color) {
 	this->wing_animation = 0;
 	this->wing_up = true;
 
-	this->rotation = 0;
-	this->rotation_axis = 0;
+}
 
+Boid::Boid() {
 }
 
 Boid::~Boid() {
@@ -30,38 +31,24 @@ Boid::~Boid() {
 
 void Boid::drawBoid() {
 
-	/* rotate boid if direction changed */
-//	glPushMatrix();
-//
-//
-//	/* select axis */
-//	if(rotation_axis == Y_AXIS) {
-//		glRotatef(rotation, 0, 1 , 0);
-//	}
-//
-//	if(rotation_axis == X_AXIS) {
-//		glRotatef(rotation, 1, 0, 0);
-//	}
 	draw_body();
 	draw_wings();
-
-	/* pop rotation matrix */
-//	glPopMatrix();
+	
 }
 
+/* update boid position */
 void Boid::updatePosition(const Vector& v) {
 	this->position = this->position + v;
 }
 
+/* update boid vector speed */
 void Boid::updateSpeed(const Vector& v) {
 	this->speed = v;
 }
 
+/* change boid size */
 void Boid::setSize(float size) {
 	this->size = size;
-}
-
-Boid::Boid() {
 }
 
 /* change boid color */
@@ -69,10 +56,10 @@ void Boid::changeColor(int color) {
 	this->boid_color.changeColor(color);
 }
 
+/* draw boid body */
 void Boid::draw_body() {
 
 	float oneSize = this->size;
-	float twiceSize = (float) this->size * 2;
 
 	glBegin(GL_QUADS);        // Draw The Cube Using quads
 
@@ -143,16 +130,10 @@ void Boid::draw_body() {
 	glEnd();
 }
 
-void Boid::debug_boid() {
-	printf("Boid #%d | pos:(%3f,%3f,%3f) | speed:(%3f,%3f,%3f) | size: %3f\n",
-			id, position.x, position.y, position.z, speed.x, speed.y, speed.z,
-			size);
-}
-
+/* draw boid wings */
 void Boid::draw_wings() {
 
 	float oneSize = this->size;
-	float half_size = this->size / 2;
 	float wing_size = this->size / 5;
 	float wing_height = this->size / 7;
 
@@ -222,4 +203,11 @@ void Boid::draw_wings() {
 		}
 	}
 
+}
+
+/* debug boid variables */
+void Boid::debug_boid() {
+	printf("Boid #%d | pos:(%3f,%3f,%3f) | speed:(%3f,%3f,%3f) | size: %3f\n",
+			id, position.x, position.y, position.z, speed.x, speed.y, speed.z,
+			size);
 }

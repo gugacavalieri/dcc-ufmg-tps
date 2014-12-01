@@ -42,7 +42,6 @@ private:
 	Vector position;
 	Vector lookingAt;
 	Vector normal;
-	float window_aspect;
 	float central_tower_height;
 	float camera_zoom;
 	int mode;

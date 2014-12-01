@@ -80,15 +80,17 @@ int WorldObject::get_size() {
 	return this->size;
 }
 
+/* debug object variables */
 void WorldObject::debug_object() {
 
+	/* decide object type */
 	if (type == SPHERE) {
-		printf("Object: SPHERE | Center of Mass:(%3f,%3f,%3f) | Size: %3f\n",
+		printf("Object: SPHERE | Center of Mass:(%3f,%3f,%3f) | Size: %d\n",
 				center_of_mass.x, center_of_mass.y, center_of_mass.z, size);
 	}
 
 	if (type == CONE) {
-			printf("Object: CONE | Center of Mass:(%3f,%3f,%3f) | Size: %3f\n",
+			printf("Object: CONE | Center of Mass:(%3f,%3f,%3f) | Size: %d\n",
 					center_of_mass.x, center_of_mass.y, center_of_mass.z, size);
 		}
 

@@ -2,6 +2,8 @@
 
 #include <cmath>
 
+/* vector class implementation */
+
 Vector::Vector()
 {
     this->x=this->y=this->z=0;

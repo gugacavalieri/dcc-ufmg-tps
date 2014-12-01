@@ -3,6 +3,8 @@
  *
  *  Created on: Oct 20, 2014
  *      Author: gustavo
+ *
+ *  define a boid model
  */
 
 #ifndef MODEL_BOID_H_
@@ -42,9 +44,6 @@ private:
 
 	float wing_animation;
 	bool wing_up;
-
-	float rotation;
-	int rotation_axis;
 
 	void draw_body();
 	void draw_wings();

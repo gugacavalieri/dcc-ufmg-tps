@@ -17,6 +17,7 @@ Random::~Random() {
 	// TODO Auto-generated destructor stub
 }
 
+/* generate random float between lb and hb */
 float Random::generate_random_f(int lb, int hb) {
 
 	/* check if lower bound and higher bound are equal */
@@ -29,8 +30,10 @@ float Random::generate_random_f(int lb, int hb) {
 
 }
 
+/* generate random integer between lb and hb*/
 int Random::generate_random_i(int lb, int hb) {
 
+	/* check if lower bound and higher bound are equal */
 	if( lb == hb )
 		return lb;
 

@@ -47,6 +47,7 @@ private:
 
 	void generate_objects();
 
+	/* random number generator */
 	Random rand;
 
 	list<WorldObject> objects;

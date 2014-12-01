@@ -15,7 +15,6 @@ Camera::Camera(const Vector &pos, const Vector &look, const Vector &normal,
 	this->position = pos;
 	this->lookingAt = look;
 	this->normal = normal;
-	this->window_aspect = 1;
 	this->central_tower_height = central_tower_height;
 	this->mode = 0;
 	this->camera_zoom = CAMERA_DISTANCE;
@@ -25,6 +24,7 @@ Camera::~Camera() {
 	// TODO Auto-generated destructor stub
 }
 
+/* update camera position */
 void Camera::update_position(const Vector& v) {
 	this->position = this->position + v;
 }
@@ -35,10 +35,6 @@ void Camera::update_lookingAt(const Vector& v) {
 
 void Camera::update_normal(const Vector& v) {
 	this->normal = v;
-}
-
-void Camera::set_window_aspect(float window_aspect) {
-	this->window_aspect = window_aspect;
 }
 
 void Camera::update_camera(Vector& target, Vector speed) {
@@ -66,6 +62,7 @@ void Camera::update_camera(Vector& target, Vector speed) {
 
 }
 
+/* look at target */
 void Camera::look_at() {
 
 	// Especifica sistema de coordenadas do modelo
@@ -83,6 +80,7 @@ void Camera::change_mode() {
 	this->mode = (this->mode + 1) % CAMERA_MODES;
 }
 
+/* zoom camera function */
 void Camera::zoom(int mode) {
 
 	/* zoom in or zoom out ? */
@@ -98,6 +96,7 @@ void Camera::zoom(int mode) {
 
 }
 
+/* debug camera variables */
 void Camera::debug_camera() {
 
 	printf("#### DEBUGING CAMERA ####\n");

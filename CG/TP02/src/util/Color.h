@@ -3,6 +3,8 @@
  *
  *  Created on: Nov 8, 2014
  *      Author: gustavo
+ 
+ define a RGB color
  */
 
 #ifndef UTIL_COLOR_H_
@@ -31,6 +33,7 @@ public:
 	float getBlue();
 
 private:
+	/* rgb values */
 	int red;
 	int green;
 	int blue;

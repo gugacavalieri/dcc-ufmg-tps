@@ -99,8 +99,10 @@ void World::remove_object() {
 
 }
 
+/* draw world walls */
 void World::draw_walls() {
 
+	/* blue walls ! */
 	glColor3f(0.0f, 0.5f, 1.0f);
 
 	glBegin(GL_QUADS);
@@ -137,6 +139,7 @@ void World::draw_walls() {
 
 }
 
+/* draw every world object */
 void World::draw_objects() {
 
 	/* draw every object in the list!	*/
@@ -149,10 +152,12 @@ void World::draw_objects() {
 
 }
 
+/* get list of world objects */
 list<WorldObject> World::get_objects() {
 	return this->objects;
 }
 
+/* debug world variables */
 void World::debug_world() {
 
 	printf("#### DEBUGING WORLD ####\n");

@@ -1,6 +1,7 @@
 /*
  * rendering.cpp
  *
+ implement opengl callbacks and rendering functions
  */
 
 #include <GL/glut.h>
@@ -15,6 +16,7 @@
 int screenWidth, screenHeight;
 float window_aspect;
 
+/* world, flock and camera */
 World w;
 Flock bflock(w.getTowerHeight(), w.getWorldSize());
 Camera camera(Vector(10, 5, 50), Vector(0, 0, 0), Vector(0, 1, 0),
@@ -24,42 +26,83 @@ Camera camera(Vector(10, 5, 50), Vector(0, 0, 0), Vector(0, 1, 0),
 int debug = 0;
 bool nextFrame = false;
 bool fog_enabled = false;
-
+bool started = false;
 float fog_density = FOG_DENSITY;
 
+/* buffer de interface do usuario */
+char hud_buffer[100];
+
+// Desenha um texto na janela GLUT
+void draw_text(char *string, float x, float y) {
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+	glLoadIdentity();
+	gluOrtho2D(0.0, screenWidth, 0.0, screenHeight);
+
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+	glLoadIdentity();
+
+	// Posição no universo onde o texto será colocado
+	glRasterPos2f(x, y);
+
+	// Exibe caracter a caracter
+	while (*string) {
+		glutBitmapCharacter(GLUT_BITMAP_9_BY_15, *string++);
+	}
+
+	glMatrixMode(GL_MODELVIEW);
+	glPopMatrix();
+
+	glMatrixMode(GL_PROJECTION);
+	glPopMatrix();
+}
+
+/* display callback function */
 void render_scene() {
 
 	/* Limpar todos os pixels */
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	camera.look_at();
-	w.draw_world();
-	bflock.draw_boids();
+	if (started) {
+		camera.look_at();
+		w.draw_world();
+		bflock.draw_boids();
+	}
+	else {
+		draw_text("- cubieboids -", screenWidth / 2, screenHeight / 2);
+		draw_text("press 's' to start!", screenWidth / 2, screenHeight / 2 - 20);
+	}
 
 	/* Não esperar! */
 	glFlush();
 
 }
 
+/* program main loop */
 void main_loop(int data) {
 
 	glutTimerFunc(REFRESH_RATE, main_loop, 1);
 
-	/* check if debug mode is active */
-	if (!debug || nextFrame) {
-		camera.update_camera(bflock.flock_center, bflock.leader.speed);
-		bflock.update_boids(w.get_objects());
-	}
-	if (debug && nextFrame) {
-		bflock.debug_flock();
-		w.debug_world();
-		camera.debug_camera();
-		nextFrame = false;
+	if (started) {
+		/* check if debug mode is active */
+		if (!debug || nextFrame) {
+			camera.update_camera(bflock.flock_center, bflock.leader.speed);
+			bflock.update_boids(w.get_objects());
+		}
+		if (debug && nextFrame) {
+			bflock.debug_flock();
+			w.debug_world();
+			camera.debug_camera();
+			nextFrame = false;
+		}
 	}
 
+	/* redraw scene */
 	glutPostRedisplay();
 }
 
+/* enable OpenGL fog engine */
 void enable_fog() {
 
 	GLfloat density = fog_density;
@@ -74,6 +117,7 @@ void enable_fog() {
 
 }
 
+/* disable fog */
 void disable_fog() {
 
 	glDisable(GL_FOG);
@@ -88,6 +132,7 @@ void processNormalInput(unsigned char key, int x, int y) {
 		exit(0);
 	}
 
+	/* change camera mode */
 	if (key == 'c') {
 		camera.change_mode();
 	}
@@ -102,6 +147,7 @@ void processNormalInput(unsigned char key, int x, int y) {
 		bflock.remove_boid();
 	}
 
+	/* camera zoom-in, zoom-out */
 	if (key == 'q') {
 		camera.zoom(ZOOM_OUT);
 	}
@@ -114,6 +160,11 @@ void processNormalInput(unsigned char key, int x, int y) {
 	if (key == 'd') {
 		debug = (debug + 1) % 2;
 		nextFrame = true;
+	}
+
+	/* start simulation */
+	if (key == 's') {
+		started = true;
 	}
 
 	/* advance frame */
@@ -133,7 +184,7 @@ void processNormalInput(unsigned char key, int x, int y) {
 	}
 
 }
-
+/* process keyboard special keys inputs */
 void processSpecialKeys(int key, int x, int y) {
 
 	/* turn flock leader */
@@ -153,15 +204,18 @@ void processSpecialKeys(int key, int x, int y) {
 	/* change fog density */
 	if (key == GLUT_KEY_F1) {
 		fog_density -= 0.00001;
+		enable_fog();
 		printf("# Fog Density: %3f\n", fog_density);
 	}
 	if (key == GLUT_KEY_F2) {
 		fog_density += 0.00001;
+		enable_fog();
 		printf("# Fog Density: %3f\n", fog_density);
 	}
 
 }
 
+/* init OpenGL lighting engine */
 void init_lighting() {
 
 	// clear depth buffer
@@ -174,20 +228,19 @@ void init_lighting() {
 
 }
 
+/* init rendering variables */
 void init_rendering(int argc, char** argv) {
 
 	// init window size
 	processArguments(argc, argv);
 
-	// set window aspect
-	camera.set_window_aspect((float) screenWidth / screenHeight);
-
 	// init GLUT and create window
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH);
 	glutInitWindowSize(screenWidth, screenHeight);
-	glutCreateWindow("VBoids");
+	glutCreateWindow("Cubie-boids");
 
+	/* init lighting */
 	init_lighting();
 
 	// register callback functions
@@ -200,7 +253,7 @@ void processArguments(int argc, char** argv) {
 	// check program arguments
 	if (argc != 3) {
 		printf(
-				"Erro de parametros! Uso: ./galaxian <SCREEN WIDTH> <SCREEN HEIGHT>\n");
+				"Erro de parametros! Uso: ./cubieboids <SCREEN WIDTH> <SCREEN HEIGHT>\n");
 		printf(
 				"Usando paremtros padrao! SCREEN WIDTH: 800 - SCREEN HEIGHT: 600\n");
 		screenWidth = DEFAULT_WIDTH;
@@ -212,6 +265,7 @@ void processArguments(int argc, char** argv) {
 	}
 }
 
+/* callback function for window resizing */
 void reshape(int w, int h) {
 
 	glViewport(0, 0, (GLsizei) w, (GLsizei) h);
@@ -228,6 +282,4 @@ void register_callbacks() {
 	glutReshapeFunc(reshape);
 	glutKeyboardFunc(processNormalInput);
 	glutSpecialFunc(processSpecialKeys);
-//	glutPassiveMotionFunc (mouseMotion);
-//	glutMouseFunc(processMouseClick);
 }

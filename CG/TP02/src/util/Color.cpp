@@ -7,8 +7,14 @@
 
 #include "Color.h"
 
+/* default constructor */
+/* receive a color code as a parameter */
 Color::Color(int color) {
 	changeColor(color);
+}
+
+Color::Color() {
+	changeColor(WHITE);
 }
 
 Color::~Color() {
@@ -18,7 +24,7 @@ Color::~Color() {
 /* change RGB color values */
 void Color::changeColor(int color) {
 
-	/* choose color type */
+	/* choose color code */
 	if( color == RED ) {
 		this->red = 255;
 		this->green = 0;
@@ -50,6 +56,7 @@ void Color::changeColor(int color) {
 	}
 }
 
+/* get RGB values */
 float Color::getRed() {
 	return (float) this->red / RGB_LIMIT;
 }
@@ -60,7 +67,4 @@ float Color::getGreen() {
 
 float Color::getBlue() {
 	return (float) this->blue / RGB_LIMIT;
-}
-
-Color::Color() {
 }

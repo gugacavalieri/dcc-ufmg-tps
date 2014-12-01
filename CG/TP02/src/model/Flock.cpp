@@ -40,6 +40,7 @@ Flock::~Flock() {
 	// TODO Auto-generated destructor stub
 }
 
+/* update every boid to maintain flocking behavior */
 void Flock::update_boids(list<WorldObject> objects) {
 
 	/* update leader position */
@@ -61,12 +62,6 @@ void Flock::update_boids(list<WorldObject> objects) {
 		rule4 = tend_to_place(nextBoid, leader.position);
 		rule5 = avoid_objects(nextBoid, objects);
 
-		Vector new_speed = nextBoid.speed + rule1 + rule2 + rule3 + rule4
-				+ rule5;
-		float angle = new_speed.AngleBetween(nextBoid.speed);
-
-		/* rotate boid if direction changed */
-//		nextBoid.set_rotation(angle, X_AXIS);
 		/* update speed and position */
 		nextBoid.speed = nextBoid.speed + rule1 + rule2 + rule3 + rule4 + rule5;
 		nextBoid.speed = nextBoid.speed / NORMALIZE_FLOCK_RULES;
@@ -80,6 +75,7 @@ void Flock::update_boids(list<WorldObject> objects) {
 
 }
 
+/* draw every boid in the flock */
 void Flock::draw_boids() {
 
 	/* draw leader boid */
@@ -95,6 +91,8 @@ void Flock::draw_boids() {
 
 }
 
+/* floking rule */
+/* Rule 1: Boids try to fly towards the centre of mass of neighbouring boids */
 Vector Flock::update_cohesion(Boid b) {
 
 	Vector result;
@@ -112,6 +110,8 @@ Vector Flock::update_cohesion(Boid b) {
 	return (result - b.position) / 100;
 }
 
+/* flocking rule */
+/* Rule 2: Boids try to keep a small distance away from other objects (including other boids) */
 Vector Flock::update_separation(Boid b) {
 
 	Vector result;
@@ -136,6 +136,7 @@ Vector Flock::update_separation(Boid b) {
 
 }
 
+/* add new boid to the flock*/
 void Flock::add_new_boid() {
 
 	/* generate new boid position */
@@ -145,17 +146,20 @@ void Flock::add_new_boid() {
 			flock_center.z
 					+ rand.generate_random_f(0, max_distance_from_flock));
 
+	/* generate boid speed */
 	Vector boid_speed(rand.generate_random_f(0, MAX_BOID_SPEED), 0,
 			rand.generate_random_f(0, MAX_BOID_SPEED));
 
-	float boid_size = rand.generate_random_f(0, max_boid_size);
-
+	/* create boid */
 	Boid new_boid(boid_pos, boid_speed, LEADER_SIZE, generate_new_id(), RED);
 
+	/* add boid to the list **/
 	boids.push_back(new_boid);
 
 }
 
+/* flocking rule */
+/* Rule 3: Boids try to match velocity with near boids */
 Vector Flock::update_alignment(Boid b) {
 
 	Vector result;
@@ -202,6 +206,8 @@ void Flock::update_flock_variables() {
 
 }
 
+/* flocking rule */
+/* boids tend to go to a particular place */
 Vector Flock::tend_to_place(Boid b, Vector place) {
 
 	Vector result = place;
@@ -210,10 +216,12 @@ Vector Flock::tend_to_place(Boid b, Vector place) {
 
 }
 
+/* control boid leader direction */
 void Flock::direct_boid_leader(int direction) {
 
 	Vector normal_speed;
 
+	/* decide new direction and calculate speed vector */
 	if (direction == RIGHT) {
 		normal_speed = this->leader.speed.Cross(Vector(0, 1, 0));
 	}
@@ -239,10 +247,12 @@ void Flock::direct_boid_leader(int direction) {
 	this->leader.speed = this->leader.speed + normal_speed;
 }
 
+/* return leader position */
 Vector Flock::get_leader_position() {
 	return this->leader.position;
 }
 
+/* remove boid from list */
 void Flock::remove_boid() {
 	/* flock must have at least one boid */
 	if (boids.size() > 1)
@@ -273,17 +283,19 @@ Vector Flock::avoid_objects(Boid b, list<WorldObject> objects) {
 
 }
 
+/* generate new boid id */
 int Flock::generate_new_id() {
 	int old_id = this->idCounter;
 	this->idCounter++;
 	return old_id;
 }
 
+/* debug flock variables */
 void Flock::debug_flock() {
 
 	/* print flock values */
 	printf("#### DEBUGING FLOCK ####\n");
-	printf("Boids counter: %d | flock center: (%3f,%3f,%3f)\n", boids.size(),
+	printf("Boids counter: %ld | flock center: (%3f,%3f,%3f)\n", boids.size(),
 			flock_center.x, flock_center.y, flock_center.z);
 
 	/* print every boid variables */
