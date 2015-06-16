@@ -78,3 +78,61 @@ Por exemplo temos uma classe Quadra (Polígono) sendo representada através dos 
 * R10: Poligonos Simples
 * R11: Regiões Poligonais
 * RT: Topológicas
+
+# Prova 02
+### Bancos de dados geográficos
+
+## Métodos de Acesso
+* O SGBD utiliza o método de acesso aos dados que parece ser o mais adequado para a solução de cada operação
+* Otimização heurística: Características estruturais da tabela e índices
+* Otimização baseada em custos: Cálculos aproximados do custo da consulta
+* Indice: Maneira rápida de buscar dados em uma tabela.
+* Métodos tradicionais: Chaves alfabéticas ou numéricas simples
+* Dados espaciais: Multidimensionais
+* Métodos de acesso espaciais = Indices espaciais: Estruturas de dados auxiliares para garantir a eficiência de consultas espaciais. Ao contrário de índices tradicionais, estes são obrigatórios.
+* Métodos de acesso espaciais: Filtragem da consulta para determinar um subconjunto de objetos que podem atender as especificações da consulta -> Executada com rapidez (Candidatos x Falso Candidatos)
+
+
+## Tipos de índices espaciais
+* Grid File: Baseado em hashing. Adequado para conjunto de pontos. Hashing em duas dimensões.
+* K-d Tree: Indexa chaves formadas por k atributos. Cada nível da árvore corresponde a uma das dimensões. (i.e níveis pares indexam 'x', níveis impares indexam 'y')
+* Quad-tree: Arvore em que cada nó possui quatro folhas. Folhas equivalem a divisão de um quadrado em 4 quadrantes.
+* Tiling: Divisão em camadas de quadrados
+* R-Tree: Indexa objetos pelo seu retangulo envolvente mínimo. Cada bloco de armazenamento pode conter um número variável de retângulos. Aumento de objetos causa subdivisões nos blocos e redução causa fusões de blocos
+* Exitem diversas variações da R-tree visando o aumento da eficiência desta.
+
+## Processamento de consultas
+* Nem sempre o otimizador conseguirá melhor desempenho apenas escolhendo os métodos de acesso e a ordem de execução
+* Tuning: Processo de melhoramento do desempenho de um gerenciador de banco de dados
+* Tuning envolve várias variáveis: SO, hardware, etc
+* Exemplos de tuning: I/O, SGBD, Consultas (plano de execução).
+
+## Padrões OGC e Serviços Web Geoespaciais
+* O OGC idealizou uma arquitetura para acesso distribuido a dados geo-espaciais -> Serviços Web OGC
+* Service Oriented Architecture (SOA): Funções implementadas e usadas pelas aplicações são definidas sob a forma de serviçõs
+* Serviço deve funcionar de forma independente de outros serviços. Deve possuir interface bem definida. Deve aceitar uma ou mais requisições devolvendo uma ou mais respostas. Quem invoca não conhece a implementação. 
+* Padrões para a invocação do serviço evoluíram a partir de padrões como RPC. Processo de comunicação entre cliente e servidor.
+* Existem mais de 30 padrões OGC relacionados a serviços e seus componentes.
+
+## Serviços Web OGC
+
+### Web Map Service (WMS)
+
+* Web Map Service (WMS): Recupera mapas prontos em formato de imagem. Mapas construídos no servidor
+* GetCapabilities: Retorna um documento XML descrevendo as interfaces suportadas
+* GetMap: Cliente solicita um mapa indicando componentes do **GetCapabilities** para compo-lo.
+* WMS: Sem um mecanismo de **Tiling** e **Cache**, tende a ser pesado e com limitações de escalabilidade. 
+* Servidores **WMS**: MapServer, GeoServer
+* Clientes **WMS**: QuantumGIS, OpenJUMP, uDig, etc...
+
+### Web Feature Service (WFS)
+
+* Acesso a features -> objetos geográficos completos (atributos, geometria)
+* Features transportados em GML
+* GetCapabilities, GetFeature
+* Servidores: GeoServer, MapServer
+* Clientes: uDig, Gaia, OpenLayers
+
+### OGC e ISO
+* Os padrões OGC e ISO foram unidos.
+* Na prática ambos os padrões são a mesma coisa
